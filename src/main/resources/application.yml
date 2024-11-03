@@ -2,18 +2,18 @@ spring:
   profiles:
     active: '@activeProfile@'
   application:
-    name: tech-challenge
+    name: payment-microservice
   datasource:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
     properties:
       hibernate:
-        default_schema: tech-challenge
+        default_schema: payments
         enable_lazy_load_no_trans: true
     show-sql: false
   flyway:
-    schemas: tech-challenge
+    schemas: payments
 
 server:
   servlet:
@@ -29,3 +29,9 @@ springdoc:
 mercadopago:
   access_token: ${MP_ACCESS_TOKEN:TEST-2194493215547460-072323-e7020fc0d11389fdae3dc86c6b9a1e4f-115466963}
   notification_url: ${MP_NOTIFICATION_URL:https://614f-2804-7f0-bec0-2fa7-4d18-dc53-6657-d0ff.ngrok-free.app/pedidos/mercadopago/notifications}
+
+aws:
+  sqs:
+    payment-requests-queue: payment-requests-queue
+  sns:
+    updates-payments-topic: updates-payments-topic
