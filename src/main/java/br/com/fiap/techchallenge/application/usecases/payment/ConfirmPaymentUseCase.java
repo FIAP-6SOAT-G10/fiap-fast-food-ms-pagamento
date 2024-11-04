@@ -2,7 +2,7 @@ package br.com.fiap.techchallenge.application.usecases.payment;
 
 import br.com.fiap.techchallenge.application.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
-import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentStatusEnum;
+import br.com.fiap.techchallenge.domain.entities.pagamento.enums.PaymentStatusEnum;
 import br.com.fiap.techchallenge.domain.exceptions.PaymentAlreadyProcessedException;
 import br.com.fiap.techchallenge.domain.exceptions.PaymentNotFoundException;
 
@@ -42,11 +42,11 @@ public class ConfirmPaymentUseCase {
     }
 
     private boolean isPaymentAlreadyProcessed(String paymentStatus) {
-        return PaymentStatusEnum.AUTHORIZED.getNominalStatus().equalsIgnoreCase(paymentStatus) ||
+        return PaymentStatusEnum.PAID.getNominalStatus().equalsIgnoreCase(paymentStatus) ||
                 PaymentStatusEnum.DENIED.getNominalStatus().equalsIgnoreCase(paymentStatus);
     }
 
     private boolean isPaymentAuthorized(String paymentStatus) {
-        return PaymentStatusEnum.AUTHORIZED.getNominalStatus().equalsIgnoreCase(paymentStatus);
+        return PaymentStatusEnum.PAID.getNominalStatus().equalsIgnoreCase(paymentStatus);
     }
 }

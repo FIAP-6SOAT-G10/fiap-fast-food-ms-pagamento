@@ -1,12 +1,16 @@
 package br.com.fiap.techchallenge.infra.config;
 
 import br.com.fiap.techchallenge.application.gateways.INotificationRepository;
+import br.com.fiap.techchallenge.application.gateways.IPaymentProviderRepository;
 import br.com.fiap.techchallenge.application.gateways.IPaymentRepository;
+import br.com.fiap.techchallenge.application.usecases.VerifyPaymentUseCase;
 import br.com.fiap.techchallenge.application.usecases.payment.ConfirmPaymentUseCase;
 import br.com.fiap.techchallenge.application.usecases.payment.CreatePaymentUseCase;
 import br.com.fiap.techchallenge.application.usecases.payment.MakePaymentUseCase;
 import br.com.fiap.techchallenge.application.usecases.payment.NotifyPaymentConsumerUseCase;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentRedShiftRepository;
+import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.MercadoPagoClient;
+import br.com.fiap.techchallenge.infra.gateways.MercadoPagoPaymentProviderRepository;
 import br.com.fiap.techchallenge.infra.gateways.NotificationRepository;
 import br.com.fiap.techchallenge.infra.gateways.PaymentRepository;
 import br.com.fiap.techchallenge.infra.presenters.PaymentMapper;
@@ -30,8 +34,13 @@ public class PaymentConfig {
     }
 
     @Bean
-    public MakePaymentUseCase buildMakePaymentUseCase(IPaymentRepository paymentRepository) {
-        return new MakePaymentUseCase(paymentRepository);
+    public MakePaymentUseCase buildMakePaymentUseCase(IPaymentRepository paymentRepository, IPaymentProviderRepository paymentProviderRepository) {
+        return new MakePaymentUseCase(paymentRepository, paymentProviderRepository);
+    }
+
+    @Bean
+    public VerifyPaymentUseCase buildVerifyPaymentUseCase(IPaymentProviderRepository paymentProviderRepository) {
+        return new VerifyPaymentUseCase(paymentProviderRepository);
     }
 
     @Bean
@@ -52,6 +61,11 @@ public class PaymentConfig {
     @Bean
     public IPaymentRepository buildPaymentRepository(PaymentMapper paymentMapper, PaymentRedShiftRepository paymentRedShiftRepository) {
         return new PaymentRepository(paymentMapper, paymentRedShiftRepository);
+    }
+
+    @Bean
+    public IPaymentProviderRepository buildPaymentProviderRepository(MercadoPagoClient mercadoPagoClient) {
+        return new MercadoPagoPaymentProviderRepository(mercadoPagoClient);
     }
 
 }

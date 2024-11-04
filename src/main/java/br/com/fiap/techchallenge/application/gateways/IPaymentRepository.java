@@ -7,7 +7,7 @@ public interface IPaymentRepository {
 
     void createPayment(PaymentRequest paymentRequest);
 
-    Payment sendPayment(String externalOrderId);
+    Payment savePayment(String externalOrderId);
 
     Payment findPayment(String internalPaymentId);
 

@@ -1,31 +1,30 @@
 package br.com.fiap.techchallenge.infra.entrypoints.rest.payment.model;
 
 public class PaymentNotification {
-    private PaymentData data;
-    private String action;
-    private String type;
+    private String resource;
+    private String topic;
 
-    public PaymentData getData() {
-        return data;
+    public String getResource() {
+        return resource;
     }
 
-    public void setData(PaymentData data) {
-        this.data = data;
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 
-    public String getAction() {
-        return action;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setAction(String action) {
-        this.action = action;
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    @Override
+    public String toString() {
+        return "PaymentNotification{" +
+                "resource='" + resource + '\'' +
+                ", topic='" + topic + '\'' +
+                '}';
     }
 }
