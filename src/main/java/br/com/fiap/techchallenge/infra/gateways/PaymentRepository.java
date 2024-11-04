@@ -3,7 +3,7 @@ package br.com.fiap.techchallenge.infra.gateways;
 import br.com.fiap.techchallenge.application.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentRequest;
-import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentStatusEnum;
+import br.com.fiap.techchallenge.domain.entities.pagamento.enums.PaymentStatusEnum;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentEntity;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentRedShiftRepository;
 import br.com.fiap.techchallenge.infra.presenters.PaymentMapper;
@@ -27,7 +27,7 @@ public class PaymentRepository implements IPaymentRepository {
     }
 
     @Override
-    public Payment sendPayment(String externalOrderId) {
+    public Payment savePayment(String externalOrderId) {
         Optional<PaymentEntity> paymentEntityOptional = this.paymentRedShiftRepository.findByExternalId(externalOrderId);
         if (paymentEntityOptional.isEmpty()) {
             throw new IllegalArgumentException("Pagamento não encontrado");

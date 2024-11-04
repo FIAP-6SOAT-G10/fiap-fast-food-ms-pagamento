@@ -1,9 +1,9 @@
-package br.com.fiap.techchallenge.domain.entities.pagamento;
+package br.com.fiap.techchallenge.domain.entities.pagamento.enums;
 
 public enum PaymentStatusEnum {
     WAITING("waiting"),
     WAITING_AUTHORIZATION("waiting_authorization"),
-    AUTHORIZED("authorized"),
+    PAID("paid"),
     DENIED("denied");
 
     private final String nominalStatus;

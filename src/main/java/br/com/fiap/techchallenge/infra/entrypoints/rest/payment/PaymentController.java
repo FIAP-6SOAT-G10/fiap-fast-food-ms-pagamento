@@ -1,7 +1,9 @@
 package br.com.fiap.techchallenge.infra.entrypoints.rest.payment;
 
+import br.com.fiap.techchallenge.application.usecases.VerifyPaymentUseCase;
 import br.com.fiap.techchallenge.application.usecases.payment.ConfirmPaymentUseCase;
 import br.com.fiap.techchallenge.application.usecases.payment.MakePaymentUseCase;
+import br.com.fiap.techchallenge.domain.entities.pagamento.MercadoLibreResponse;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import br.com.fiap.techchallenge.domain.exceptions.PaymentAlreadyProcessedException;
 import br.com.fiap.techchallenge.domain.exceptions.PaymentNotFoundException;
@@ -24,6 +26,7 @@ public class PaymentController {
 
     private final MakePaymentUseCase makePaymentUseCase;
     private final ConfirmPaymentUseCase confirmPaymentUseCase;
+    private final VerifyPaymentUseCase verifyPaymentUseCase;
 
     private final PaymentMapper paymentMapper;
 
@@ -39,14 +42,25 @@ public class PaymentController {
 
     @PostMapping(path = "/confirmation")
     public ResponseEntity<?> receivePaymentConfirmation(@RequestBody PaymentNotification paymentNotification) {
+        log.info("Mensagem recebida {}", paymentNotification);
+        if (paymentNotification.getTopic() == null || !paymentNotification.getTopic().equalsIgnoreCase("merchant_order")) {
+            return null;
+        }
+
         Payment payment = null;
         try {
-            payment = confirmPaymentUseCase.execute(paymentNotification.getData().getId(), paymentNotification.getData().getStatus());
+            MercadoLibreResponse mercadoLibreResponse = verifyPaymentUseCase.execute(paymentNotification.getResource());
+            if (mercadoLibreResponse == null) {
+                return null;
+            }
+
+            payment = confirmPaymentUseCase.execute(mercadoLibreResponse.getExternalReference(), mercadoLibreResponse.getOrderStatus());
         } catch (PaymentAlreadyProcessedException paymentAlreadyProcessedException) {
             return ResponseEntity.badRequest().body(paymentAlreadyProcessedException.getMessage());
         } catch (PaymentNotFoundException paymentNotFoundException) {
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.status(HttpStatus.OK).body(paymentMapper.fromDomainToDataTransferObject(payment));
     }
 
