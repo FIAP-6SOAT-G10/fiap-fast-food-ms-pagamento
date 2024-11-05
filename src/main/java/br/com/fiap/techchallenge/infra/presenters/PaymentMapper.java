@@ -5,7 +5,7 @@ import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentRequest;
 import br.com.fiap.techchallenge.domain.entities.pagamento.enums.PaymentStatusEnum;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentEntity;
 import br.com.fiap.techchallenge.infra.entrypoints.queue.payment.model.PaymentRequestDTO;
-import br.com.fiap.techchallenge.infra.entrypoints.rest.payment.model.PaymentResponse;
+import br.com.fiap.techchallenge.infra.entrypoints.rest.payment.model.PaymentResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public class PaymentMapper {
 
     public PaymentEntity fromDomainToEntity(PaymentRequest paymentRequest) {
         PaymentEntity paymentEntity = new PaymentEntity();
-        paymentEntity.setId(UUID.randomUUID().toString());
+        paymentEntity.setInternalPaymentId(UUID.randomUUID().toString());
         paymentEntity.setExternalId(paymentRequest.getExternalOrderId());
         paymentEntity.setPayer(paymentRequest.getPayer());
         paymentEntity.setPaymentAmount(paymentRequest.getPaymentAmount());
@@ -34,27 +34,31 @@ public class PaymentMapper {
 
     public Payment fromEntityToDomain(PaymentEntity paymentEntity) {
         Payment payment = new Payment();
-        payment.setInternalPaymentId(paymentEntity.getId());
-        payment.setExternalOrderId(paymentEntity.getExternalId());
+        payment.setInternalPaymentId(paymentEntity.getInternalPaymentId());
+        payment.setExternalPaymentId(paymentEntity.getExternalPaymentId());
+        payment.setExternalId(paymentEntity.getExternalId());
         payment.setPayer(paymentEntity.getPayer());
         payment.setPaymentAmount(paymentEntity.getPaymentAmount());
         payment.setPaymentDate(paymentEntity.getPaymentDate());
         payment.setPaymentRequestDate(paymentEntity.getPaymentRequestDate());
-        payment.setPaymentDate(paymentEntity.getPaymentDate());
-        payment.setPaymentRequestDate(paymentEntity.getPaymentRequestDate());
         payment.setPaymentStatus(paymentEntity.getPaymentStatus());
+        payment.setPaymentMethod(paymentEntity.getPaymentMethod());
+        payment.setPaymentType(paymentEntity.getPaymentType());
         return payment;
     }
 
-    public PaymentResponse fromDomainToDataTransferObject(Payment payment) {
-        PaymentResponse paymentResponse = new PaymentResponse();
-        paymentResponse.setExternalOrderId(payment.getExternalOrderId());
-        paymentResponse.setInternalPaymentId(payment.getInternalPaymentId());
-        paymentResponse.setPayer(payment.getPayer());
-        paymentResponse.setPaymentAmount(payment.getPaymentAmount());
-        paymentResponse.setPaymentDate(DateMapper.fromLocalDateTimeToStringWithFormat(payment.getPaymentDate(), "yyyy-MM-dd HH:mm:ss"));
-        paymentResponse.setPaymentRequestDate(DateMapper.fromLocalDateTimeToStringWithFormat(payment.getPaymentRequestDate(), "yyyy-MM-dd HH:mm:ss"));
-        paymentResponse.setPaymentStatus(payment.getPaymentStatus());
-        return paymentResponse;
+    public PaymentResponseDTO fromDomainToDataTransferObject(Payment payment) {
+        PaymentResponseDTO paymentResponseDTO = new PaymentResponseDTO();
+        paymentResponseDTO.setInternalPaymentId(payment.getInternalPaymentId());
+        paymentResponseDTO.setExternalPaymentId(payment.getExternalPaymentId());
+        paymentResponseDTO.setExternalId(payment.getExternalId());
+        paymentResponseDTO.setPayer(payment.getPayer());
+        paymentResponseDTO.setPaymentAmount(payment.getPaymentAmount());
+        paymentResponseDTO.setPaymentDate(DateMapper.fromLocalDateTimeToStringWithFormat(payment.getPaymentDate(), "yyyy-MM-dd HH:mm:ss"));
+        paymentResponseDTO.setPaymentRequestDate(DateMapper.fromLocalDateTimeToStringWithFormat(payment.getPaymentRequestDate(), "yyyy-MM-dd HH:mm:ss"));
+        paymentResponseDTO.setPaymentStatus(payment.getPaymentStatus());
+        paymentResponseDTO.setPaymentMethod(payment.getPaymentMethod());
+        paymentResponseDTO.setPaymentType(payment.getPaymentType());
+        return paymentResponseDTO;
     }
 }

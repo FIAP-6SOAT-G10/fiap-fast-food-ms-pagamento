@@ -22,10 +22,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PaymentConfig {
 
-    @Value("${mercadopago.access_token}")
-    private String mercadoPagoAccessToken;
-
-    @Value("${mercadopago.notification_url}")
+    @Value("${mercado-pago.notification-url}")
     private String mercadoPagoNotificationUrl;
 
     @Bean
@@ -44,8 +41,8 @@ public class PaymentConfig {
     }
 
     @Bean
-    public ConfirmPaymentUseCase buildConfirmPaymentUseCase(IPaymentRepository paymentRepository, NotifyPaymentConsumerUseCase notifyPaymentConsumerUseCase) {
-        return new ConfirmPaymentUseCase(paymentRepository, notifyPaymentConsumerUseCase);
+    public ConfirmPaymentUseCase buildConfirmPaymentUseCase(IPaymentRepository paymentRepository, VerifyPaymentUseCase verifyPaymentUseCase, NotifyPaymentConsumerUseCase notifyPaymentConsumerUseCase) {
+        return new ConfirmPaymentUseCase(paymentRepository, verifyPaymentUseCase ,notifyPaymentConsumerUseCase);
     }
 
     @Bean
@@ -65,7 +62,7 @@ public class PaymentConfig {
 
     @Bean
     public IPaymentProviderRepository buildPaymentProviderRepository(MercadoPagoClient mercadoPagoClient) {
-        return new MercadoPagoPaymentProviderRepository(mercadoPagoClient);
+        return new MercadoPagoPaymentProviderRepository(mercadoPagoClient, mercadoPagoNotificationUrl);
     }
 
 }
