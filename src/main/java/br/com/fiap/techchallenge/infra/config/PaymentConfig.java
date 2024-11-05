@@ -4,10 +4,7 @@ import br.com.fiap.techchallenge.application.gateways.INotificationRepository;
 import br.com.fiap.techchallenge.application.gateways.IPaymentProviderRepository;
 import br.com.fiap.techchallenge.application.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.application.usecases.VerifyPaymentUseCase;
-import br.com.fiap.techchallenge.application.usecases.payment.ConfirmPaymentUseCase;
-import br.com.fiap.techchallenge.application.usecases.payment.CreatePaymentUseCase;
-import br.com.fiap.techchallenge.application.usecases.payment.MakePaymentUseCase;
-import br.com.fiap.techchallenge.application.usecases.payment.NotifyPaymentConsumerUseCase;
+import br.com.fiap.techchallenge.application.usecases.payment.*;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentRedShiftRepository;
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.MercadoPagoClient;
 import br.com.fiap.techchallenge.infra.gateways.MercadoPagoPaymentProviderRepository;
@@ -48,6 +45,11 @@ public class PaymentConfig {
     @Bean
     public NotifyPaymentConsumerUseCase buildNotifyPaymentConsumerUseCase(INotificationRepository notificationRepository) {
         return new NotifyPaymentConsumerUseCase(notificationRepository);
+    }
+
+    @Bean
+    public ConsultPaymentUseCase buildConsultPaymentUseCase(IPaymentRepository paymentRepository) {
+        return new ConsultPaymentUseCase(paymentRepository);
     }
 
     @Bean
