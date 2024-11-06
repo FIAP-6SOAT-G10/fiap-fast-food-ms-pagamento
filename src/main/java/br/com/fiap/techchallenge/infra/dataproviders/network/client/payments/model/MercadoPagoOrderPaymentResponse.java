@@ -1,11 +1,30 @@
-package br.com.fiap.techchallenge.domain.entities.pagamento;
+package br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.model;
 
-public class MercadoLibreResponse {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
+
+public class MercadoPagoOrderPaymentResponse {
+
+    @JsonProperty("id")
     private long id;
+
+    @JsonProperty("status")
     private String status;
+
+    @JsonProperty("external_reference")
     private String externalReference;
+
+    @JsonProperty("payments")
+    private List<MercadoPagoPaymentResponse> payments;
+
+    @JsonProperty("total_amount")
     private double totalAmount;
+
+    @JsonProperty("paid_amount")
     private double paidAmount;
+
+    @JsonProperty("order_status")
     private String orderStatus;
 
     public long getId() {
@@ -30,6 +49,14 @@ public class MercadoLibreResponse {
 
     public void setExternalReference(String externalReference) {
         this.externalReference = externalReference;
+    }
+
+    public List<MercadoPagoPaymentResponse> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<MercadoPagoPaymentResponse> payments) {
+        this.payments = payments;
     }
 
     public double getTotalAmount() {

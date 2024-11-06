@@ -1,7 +1,8 @@
 package br.com.fiap.techchallenge.infra.dataproviders.network.client.payments;
 
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.config.MercadoPagoFeignConfig;
-import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.model.MercadoLibrePaymentResponse;
+import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.model.MercadoPagoPaymentDetailResponse;
+import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.model.MercadoPagoOrderPaymentResponse;
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.model.MercadoPagoPaymentRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,9 @@ public interface MercadoPagoClient {
     @PutMapping(path = "/instore/qr/seller/collectors/2076431474/stores/52211983000109/pos/52211983000109/orders")
     ResponseEntity<Void> generatePaymentRequest(@RequestBody MercadoPagoPaymentRequest mercadoPagoPaymentRequest);
 
-    @GetMapping(path = "/merchant_orders/{paymentId}")
-    ResponseEntity<MercadoLibrePaymentResponse> consultPaymentDetails(@PathVariable("paymentId") String paymentId);
+    @GetMapping(path = "/merchant_orders/{orderId}")
+    ResponseEntity<MercadoPagoOrderPaymentResponse> consultPaymentDetails(@PathVariable("orderId") String orderId);
 
+    @GetMapping(path = "/v1/payments/{paymentId}")
+    ResponseEntity<MercadoPagoPaymentDetailResponse> consultPaymentMethod(@PathVariable("paymentId") Long paymentId);
 }
