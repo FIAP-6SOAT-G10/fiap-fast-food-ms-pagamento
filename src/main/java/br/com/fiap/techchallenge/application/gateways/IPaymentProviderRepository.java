@@ -1,11 +1,13 @@
 package br.com.fiap.techchallenge.application.gateways;
 
-import br.com.fiap.techchallenge.domain.entities.pagamento.MercadoLibreResponse;
+import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentResponse;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 
 public interface IPaymentProviderRepository {
 
-    void createPaymentRequestOnPaymentProvider(Payment payment);
+    Payment createPaymentRequestOnPaymentProvider(Payment payment);
 
-    MercadoLibreResponse consultPayment(String resource);
+    PaymentResponse consultPayment(String resource);
+
+    PaymentResponse consultPaymentMethod(PaymentResponse payment);
 }

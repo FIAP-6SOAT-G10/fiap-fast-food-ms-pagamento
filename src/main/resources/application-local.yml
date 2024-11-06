@@ -6,5 +6,5 @@ spring:
 
 
 mercadopago:
-  access_token: ${MP_ACCESS_TOKEN:TEST-2194493215547460-072323-e7020fc0d11389fdae3dc86c6b9a1e4f-115466963}
-  notification_url: ${MP_NOTIFICATION_URL:https://614f-2804-7f0-bec0-2fa7-4d18-dc53-6657-d0ff.ngrok-free.app/pagamentos/pedidos/notifications}
+  access_token: ${MP_ACCESS_TOKEN}
+  notification_url: ${MP_NOTIFICATION_URL}

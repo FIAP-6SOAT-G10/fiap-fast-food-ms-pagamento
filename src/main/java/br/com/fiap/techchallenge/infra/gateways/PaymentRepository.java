@@ -7,9 +7,11 @@ import br.com.fiap.techchallenge.domain.entities.pagamento.enums.PaymentStatusEn
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.PaymentEntity;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentRedShiftRepository;
 import br.com.fiap.techchallenge.infra.presenters.PaymentMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
+@Slf4j
 public class PaymentRepository implements IPaymentRepository {
 
     private final PaymentMapper paymentMapper;
@@ -28,6 +30,7 @@ public class PaymentRepository implements IPaymentRepository {
 
     @Override
     public Payment savePayment(String externalOrderId) {
+        log.info("Gravando pagamento {}",  externalOrderId);
         Optional<PaymentEntity> paymentEntityOptional = this.paymentRedShiftRepository.findByExternalId(externalOrderId);
         if (paymentEntityOptional.isEmpty()) {
             throw new IllegalArgumentException("Pagamento não encontrado");
@@ -41,6 +44,7 @@ public class PaymentRepository implements IPaymentRepository {
 
     @Override
     public Payment findPayment(String internalPaymentId) {
+        log.info("Recuperando pagamento do banco de dados");
         Optional<PaymentEntity> paymentEntityOptional = findPaymentByInternalPaymentId(internalPaymentId);
         if (paymentEntityOptional.isEmpty()) {
             throw new IllegalArgumentException("Pagamento não encontrado");
@@ -51,14 +55,18 @@ public class PaymentRepository implements IPaymentRepository {
 
     @Override
     public Payment finishPayment(Payment payment) {
+        log.info("Finalizando o pagamento");
         Optional<PaymentEntity> paymentEntityOptional = findPaymentByInternalPaymentId(payment.getInternalPaymentId());
         if (paymentEntityOptional.isEmpty()) {
             throw new IllegalArgumentException("Pagamento não encontrado");
         }
 
         PaymentEntity paymentEntity = paymentEntityOptional.get();
+        paymentEntity.setExternalPaymentId(payment.getExternalPaymentId());
         paymentEntity.setPaymentStatus(payment.getPaymentStatus());
         paymentEntity.setPaymentDate(payment.getPaymentDate());
+        paymentEntity.setPaymentMethod(payment.getPaymentMethod());
+        paymentEntity.setPaymentType(payment.getPaymentType());
 
         return paymentMapper.fromEntityToDomain(this.paymentRedShiftRepository.save(paymentEntity));
     }

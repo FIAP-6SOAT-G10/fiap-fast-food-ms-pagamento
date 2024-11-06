@@ -16,8 +16,7 @@ public class MakePaymentUseCase {
 
     public Payment execute(String externalOrderId) {
         Payment payment = this.paymentRepository.savePayment(externalOrderId);
-        this.paymentProviderRepository.createPaymentRequestOnPaymentProvider(payment);
-        return payment;
+        return this.paymentProviderRepository.createPaymentRequestOnPaymentProvider(payment);
     }
 
 }

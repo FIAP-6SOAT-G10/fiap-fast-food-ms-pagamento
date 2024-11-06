@@ -4,10 +4,7 @@ import br.com.fiap.techchallenge.application.gateways.INotificationRepository;
 import br.com.fiap.techchallenge.application.gateways.IPaymentProviderRepository;
 import br.com.fiap.techchallenge.application.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.application.usecases.VerifyPaymentUseCase;
-import br.com.fiap.techchallenge.application.usecases.payment.ConfirmPaymentUseCase;
-import br.com.fiap.techchallenge.application.usecases.payment.CreatePaymentUseCase;
-import br.com.fiap.techchallenge.application.usecases.payment.MakePaymentUseCase;
-import br.com.fiap.techchallenge.application.usecases.payment.NotifyPaymentConsumerUseCase;
+import br.com.fiap.techchallenge.application.usecases.payment.*;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentRedShiftRepository;
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.MercadoPagoClient;
 import br.com.fiap.techchallenge.infra.gateways.MercadoPagoPaymentProviderRepository;
@@ -22,10 +19,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PaymentConfig {
 
-    @Value("${mercadopago.access_token}")
-    private String mercadoPagoAccessToken;
-
-    @Value("${mercadopago.notification_url}")
+    @Value("${mercado-pago.notification-url}")
     private String mercadoPagoNotificationUrl;
 
     @Bean
@@ -44,13 +38,18 @@ public class PaymentConfig {
     }
 
     @Bean
-    public ConfirmPaymentUseCase buildConfirmPaymentUseCase(IPaymentRepository paymentRepository, NotifyPaymentConsumerUseCase notifyPaymentConsumerUseCase) {
-        return new ConfirmPaymentUseCase(paymentRepository, notifyPaymentConsumerUseCase);
+    public ConfirmPaymentUseCase buildConfirmPaymentUseCase(IPaymentRepository paymentRepository, VerifyPaymentUseCase verifyPaymentUseCase, NotifyPaymentConsumerUseCase notifyPaymentConsumerUseCase) {
+        return new ConfirmPaymentUseCase(paymentRepository, verifyPaymentUseCase ,notifyPaymentConsumerUseCase);
     }
 
     @Bean
     public NotifyPaymentConsumerUseCase buildNotifyPaymentConsumerUseCase(INotificationRepository notificationRepository) {
         return new NotifyPaymentConsumerUseCase(notificationRepository);
+    }
+
+    @Bean
+    public ConsultPaymentUseCase buildConsultPaymentUseCase(IPaymentRepository paymentRepository) {
+        return new ConsultPaymentUseCase(paymentRepository);
     }
 
     @Bean
@@ -65,7 +64,7 @@ public class PaymentConfig {
 
     @Bean
     public IPaymentProviderRepository buildPaymentProviderRepository(MercadoPagoClient mercadoPagoClient) {
-        return new MercadoPagoPaymentProviderRepository(mercadoPagoClient);
+        return new MercadoPagoPaymentProviderRepository(mercadoPagoClient, mercadoPagoNotificationUrl);
     }
 
 }

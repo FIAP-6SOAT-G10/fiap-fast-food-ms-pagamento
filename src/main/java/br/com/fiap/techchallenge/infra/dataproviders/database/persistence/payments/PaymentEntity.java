@@ -13,8 +13,11 @@ import java.time.LocalDateTime;
 public class PaymentEntity {
 
     @Id
-    @Column(name = "id")
-    private String id;
+    @Column(name = "internal_payment_id")
+    private String internalPaymentId;
+
+    @Column(name = "external_payment_id")
+    private Long externalPaymentId;
 
     @Column(name = "external_id")
     private String externalId;
@@ -34,12 +37,26 @@ public class PaymentEntity {
     @Column(name = "payment_status")
     private String paymentStatus;
 
-    public String getId() {
-        return id;
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
+    @Column(name = "payment_type")
+    private String paymentType;
+
+    public String getInternalPaymentId() {
+        return internalPaymentId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setInternalPaymentId(String internalPaymentId) {
+        this.internalPaymentId = internalPaymentId;
+    }
+
+    public Long getExternalPaymentId() {
+        return externalPaymentId;
+    }
+
+    public void setExternalPaymentId(Long externalPaymentId) {
+        this.externalPaymentId = externalPaymentId;
     }
 
     public String getExternalId() {
@@ -88,5 +105,21 @@ public class PaymentEntity {
 
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
     }
 }
