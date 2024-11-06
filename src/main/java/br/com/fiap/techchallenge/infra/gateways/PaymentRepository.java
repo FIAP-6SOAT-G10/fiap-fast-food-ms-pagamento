@@ -4,7 +4,7 @@ import br.com.fiap.techchallenge.application.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentRequest;
 import br.com.fiap.techchallenge.domain.entities.pagamento.enums.PaymentStatusEnum;
-import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentEntity;
+import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.PaymentEntity;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentRedShiftRepository;
 import br.com.fiap.techchallenge.infra.presenters.PaymentMapper;
 
