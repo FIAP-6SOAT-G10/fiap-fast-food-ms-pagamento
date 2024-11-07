@@ -1,7 +1,6 @@
 package br.com.fiap.techchallenge.application.usecases.payment;
 
 import br.com.fiap.techchallenge.application.gateways.IPaymentRepository;
-import br.com.fiap.techchallenge.application.usecases.VerifyPaymentUseCase;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentResponse;
 import br.com.fiap.techchallenge.domain.entities.pagamento.enums.PaymentStatusEnum;

@@ -11,13 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class NotificationRepository implements INotificationRepository {
 
-    @Value("${aws.sns.updates-payments-topic}")
-    private String destination;
-
     private final SnsTemplate snsTemplate;
+    private final String destination;
 
-    public NotificationRepository(SnsTemplate snsTemplate) {
+    public NotificationRepository(SnsTemplate snsTemplate, String destination) {
         this.snsTemplate = snsTemplate;
+        this.destination = destination;
     }
 
     @Override
