@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static br.com.fiap.techchallenge.MercadoPagoHelper.buildMercadoPagoOrderPaymentResponse;
 import static br.com.fiap.techchallenge.PaymentHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -90,14 +91,7 @@ class MercadoPagoPaymentProviderRepositoryTest {
             String resource = "/9999999991";
             MercadoPagoPaymentResponse payment = new MercadoPagoPaymentResponse();
             payment.setId(123456789L);
-            MercadoPagoOrderPaymentResponse mercadoPagoOrderPaymentResponse = new MercadoPagoOrderPaymentResponse();
-            mercadoPagoOrderPaymentResponse.setId(9999999991L);
-            mercadoPagoOrderPaymentResponse.setStatus("closed");
-            mercadoPagoOrderPaymentResponse.setExternalReference("9999999992");
-            mercadoPagoOrderPaymentResponse.setPayments(List.of(payment));
-            mercadoPagoOrderPaymentResponse.setTotalAmount(199.9);
-            mercadoPagoOrderPaymentResponse.setPaidAmount(199.9);
-            mercadoPagoOrderPaymentResponse.setOrderStatus("closed");
+            MercadoPagoOrderPaymentResponse mercadoPagoOrderPaymentResponse = buildMercadoPagoOrderPaymentResponse(List.of(payment));
             when(mercadoPagoClient.consultPaymentDetails(anyString())).thenReturn(ResponseEntity.ok(mercadoPagoOrderPaymentResponse));
 
             PaymentResponse paymentResponse = mercadoPagoPaymentProviderRepository.consultPayment(resource);
@@ -127,14 +121,7 @@ class MercadoPagoPaymentProviderRepositoryTest {
         void deveConsultarPagamento_QuandoPagamentoPendente_RetornarZeroNoIdDoPagamento() {
             String resource = "/9999999991";
             List payments = mock(List.class);
-            MercadoPagoOrderPaymentResponse mercadoPagoOrderPaymentResponse = new MercadoPagoOrderPaymentResponse();
-            mercadoPagoOrderPaymentResponse.setId(9999999991L);
-            mercadoPagoOrderPaymentResponse.setStatus("closed");
-            mercadoPagoOrderPaymentResponse.setExternalReference("9999999992");
-            mercadoPagoOrderPaymentResponse.setPayments(payments);
-            mercadoPagoOrderPaymentResponse.setTotalAmount(199.9);
-            mercadoPagoOrderPaymentResponse.setPaidAmount(199.9);
-            mercadoPagoOrderPaymentResponse.setOrderStatus("closed");
+            MercadoPagoOrderPaymentResponse mercadoPagoOrderPaymentResponse = buildMercadoPagoOrderPaymentResponse(payments);
             when(mercadoPagoClient.consultPaymentDetails(anyString())).thenReturn(ResponseEntity.ok(mercadoPagoOrderPaymentResponse));
             when(payments.get(0)).thenReturn(null);
 
