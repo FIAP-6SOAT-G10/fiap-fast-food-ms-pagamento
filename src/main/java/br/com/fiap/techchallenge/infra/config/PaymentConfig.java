@@ -3,7 +3,7 @@ package br.com.fiap.techchallenge.infra.config;
 import br.com.fiap.techchallenge.application.gateways.INotificationRepository;
 import br.com.fiap.techchallenge.application.gateways.IPaymentProviderRepository;
 import br.com.fiap.techchallenge.application.gateways.IPaymentRepository;
-import br.com.fiap.techchallenge.application.usecases.VerifyPaymentUseCase;
+import br.com.fiap.techchallenge.application.usecases.payment.VerifyPaymentUseCase;
 import br.com.fiap.techchallenge.application.usecases.payment.*;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentRedShiftRepository;
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.MercadoPagoClient;
@@ -21,6 +21,9 @@ public class PaymentConfig {
 
     @Value("${mercado-pago.notification-url}")
     private String mercadoPagoNotificationUrl;
+
+    @Value("${aws.sns.updates-payments-topic}")
+    private String destination;
 
     @Bean
     public CreatePaymentUseCase buildSaveRequestPaymentUseCase(IPaymentRepository paymentRepository) {
@@ -54,7 +57,7 @@ public class PaymentConfig {
 
     @Bean
     public INotificationRepository buildNotificationRepository(SnsTemplate snsTemplate) {
-        return new NotificationRepository(snsTemplate);
+        return new NotificationRepository(snsTemplate, destination);
     }
 
     @Bean

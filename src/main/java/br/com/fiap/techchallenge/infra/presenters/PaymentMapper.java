@@ -3,7 +3,7 @@ package br.com.fiap.techchallenge.infra.presenters;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentRequest;
 import br.com.fiap.techchallenge.domain.entities.pagamento.enums.PaymentStatusEnum;
-import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentEntity;
+import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.PaymentEntity;
 import br.com.fiap.techchallenge.infra.entrypoints.queue.payment.model.PaymentRequestDTO;
 import br.com.fiap.techchallenge.infra.entrypoints.rest.payment.model.PaymentResponseDTO;
 import org.springframework.stereotype.Component;

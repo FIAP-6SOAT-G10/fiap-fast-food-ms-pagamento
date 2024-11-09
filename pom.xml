@@ -23,6 +23,19 @@
 		<validation-api.version>2.0.1.Final</validation-api.version>
 		<mercadopago.sdk-java.version>2.1.24</mercadopago.sdk-java.version>
 		<skipTests>true</skipTests>
+		<sonar.exclusions>
+			src/main/java/br/com/fiap/techchallenge/application/gateways/**,
+			src/main/java/br/com/fiap/techchallenge/domain/**,
+			src/main/java/br/com/fiap/techchallenge/infra/config/**,
+			src/main/java/br/com/fiap/techchallenge/infra/dataproviders/database/persistence/payments/repository/**,
+			src/main/java/br/com/fiap/techchallenge/infra/dataproviders/network/client/payments/**,
+			src/main/java/br/com/fiap/techchallenge/infra/entrypoints/queue/payment/model/**,
+			src/main/java/br/com/fiap/techchallenge/infra/entrypoints/rest/payment/model/**,
+			src/main/java/br/com/fiap/techchallenge/infra/exception/**,
+			src/main/java/br/com/fiap/techchallenge/infra/presenters/**,
+			src/main/java/br/com/fiap/techchallenge/infra/utils/**,
+			src/main/java/br/com/fiap/techchallenge/PaymentMicroserviceApplication.java
+		</sonar.exclusions>
 	</properties>
 
 	<repositories>

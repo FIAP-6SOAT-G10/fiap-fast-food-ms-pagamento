@@ -1,4 +1,4 @@
-package br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository;
+package br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
+    url: jdbc:redshift://${DB_HOST}:5439/${DB_NAME}
   jpa:
     show-sql: false
 

@@ -1,4 +1,4 @@
-package br.com.fiap.techchallenge.application.usecases;
+package br.com.fiap.techchallenge.application.usecases.payment;
 
 import br.com.fiap.techchallenge.application.gateways.IPaymentProviderRepository;
 import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentResponse;

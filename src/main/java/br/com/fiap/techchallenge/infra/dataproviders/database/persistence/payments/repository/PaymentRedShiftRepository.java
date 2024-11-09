@@ -1,5 +1,6 @@
 package br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository;
 
+import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.PaymentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
