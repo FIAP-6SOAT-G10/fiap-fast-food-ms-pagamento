@@ -20,10 +20,10 @@ import org.springframework.context.annotation.Configuration;
 public class PaymentConfig {
 
     @Value("${mercado-pago.notification-url}")
-    private String mercadoPagoNotificationUrl;
+    private String mercadoPagoCallbackNotificationUrl;
 
     @Value("${aws.sns.updates-payments-topic}")
-    private String destination;
+    private String destinationTopicPaymentsUpdates;
 
     @Bean
     public CreatePaymentUseCase buildSaveRequestPaymentUseCase(IPaymentRepository paymentRepository) {
@@ -57,7 +57,7 @@ public class PaymentConfig {
 
     @Bean
     public INotificationRepository buildNotificationRepository(SnsTemplate snsTemplate) {
-        return new NotificationRepository(snsTemplate, destination);
+        return new NotificationRepository(snsTemplate, destinationTopicPaymentsUpdates);
     }
 
     @Bean
@@ -67,7 +67,12 @@ public class PaymentConfig {
 
     @Bean
     public IPaymentProviderRepository buildPaymentProviderRepository(MercadoPagoClient mercadoPagoClient) {
-        return new MercadoPagoPaymentProviderRepository(mercadoPagoClient, mercadoPagoNotificationUrl);
+        return new MercadoPagoPaymentProviderRepository(mercadoPagoClient, mercadoPagoCallbackNotificationUrl);
+    }
+
+    @Bean
+    public PaymentMapper buildPaymentMapper() {
+        return new PaymentMapper();
     }
 
 }

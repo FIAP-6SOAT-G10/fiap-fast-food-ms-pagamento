@@ -4,6 +4,6 @@ import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 
 public interface INotificationRepository {
 
-    void sendNotification(Payment payment);
+    boolean sendNotification(Payment payment);
 
 }

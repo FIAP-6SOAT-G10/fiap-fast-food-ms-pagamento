@@ -4,11 +4,9 @@ import br.com.fiap.techchallenge.application.gateways.INotificationRepository;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import io.awspring.cloud.sns.core.SnsTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.messaging.MessagingException;
 
 @Slf4j
-@Component
 public class NotificationRepository implements INotificationRepository {
 
     private final SnsTemplate snsTemplate;
@@ -20,7 +18,16 @@ public class NotificationRepository implements INotificationRepository {
     }
 
     @Override
-    public void sendNotification(Payment payment) {
-        snsTemplate.convertAndSend(destination, payment);
+    public boolean sendNotification(Payment payment) {
+        try {
+            snsTemplate.convertAndSend(destination, payment);
+            return true;
+        } catch (MessagingException messagingException) {
+            log.error("Falha ao enviar a mensagem de notificação aos consumidores", messagingException);
+            throw messagingException;
+        } catch (Exception exception) {
+            log.error("Erro genérico ao enviar a mensagem de notificação aos consumidores", exception);
+            throw exception;
+        }
     }
 }

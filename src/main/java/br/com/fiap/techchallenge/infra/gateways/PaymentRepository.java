@@ -23,9 +23,9 @@ public class PaymentRepository implements IPaymentRepository {
     }
 
     @Override
-    public void createPayment(PaymentRequest paymentRequest) {
+    public Payment createPayment(PaymentRequest paymentRequest) {
         PaymentEntity paymentEntity = paymentMapper.fromDomainToEntity(paymentRequest);
-        this.paymentRedShiftRepository.save(paymentEntity);
+        return paymentMapper.fromEntityToDomain(this.paymentRedShiftRepository.save(paymentEntity));
     }
 
     @Override
