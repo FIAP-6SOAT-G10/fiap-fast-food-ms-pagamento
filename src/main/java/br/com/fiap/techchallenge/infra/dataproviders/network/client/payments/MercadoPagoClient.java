@@ -18,7 +18,7 @@ public interface MercadoPagoClient {
     ResponseEntity<Void> generatePaymentRequest(@RequestBody MercadoPagoPaymentRequest mercadoPagoPaymentRequest);
 
     @GetMapping(path = "/merchant_orders/{orderId}")
-    ResponseEntity<MercadoPagoOrderPaymentResponse> consultPaymentDetails(@PathVariable("orderId") String orderId);
+    ResponseEntity<MercadoPagoOrderPaymentResponse> consultOrderDetails(@PathVariable("orderId") String orderId);
 
     @GetMapping(path = "/v1/payments/{paymentId}")
     ResponseEntity<MercadoPagoPaymentDetailResponse> consultPaymentMethod(@PathVariable("paymentId") Long paymentId);

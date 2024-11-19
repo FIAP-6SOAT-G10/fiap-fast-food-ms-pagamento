@@ -17,8 +17,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -92,7 +90,7 @@ class MercadoPagoPaymentProviderRepositoryTest {
             MercadoPagoPaymentResponse payment = new MercadoPagoPaymentResponse();
             payment.setId(123456789L);
             MercadoPagoOrderPaymentResponse mercadoPagoOrderPaymentResponse = buildMercadoPagoOrderPaymentResponse(List.of(payment));
-            when(mercadoPagoClient.consultPaymentDetails(anyString())).thenReturn(ResponseEntity.ok(mercadoPagoOrderPaymentResponse));
+            when(mercadoPagoClient.consultOrderDetails(anyString())).thenReturn(ResponseEntity.ok(mercadoPagoOrderPaymentResponse));
 
             PaymentResponse paymentResponse = mercadoPagoPaymentProviderRepository.consultPayment(resource);
 
@@ -110,7 +108,7 @@ class MercadoPagoPaymentProviderRepositoryTest {
             String resource = "/9999999991";
             MercadoPagoOrderPaymentResponse mercadoPagoOrderPaymentResponse = new MercadoPagoOrderPaymentResponse();
             mercadoPagoOrderPaymentResponse.setStatus("open");
-            when(mercadoPagoClient.consultPaymentDetails(anyString())).thenReturn(ResponseEntity.ok(mercadoPagoOrderPaymentResponse));
+            when(mercadoPagoClient.consultOrderDetails(anyString())).thenReturn(ResponseEntity.ok(mercadoPagoOrderPaymentResponse));
 
             PaymentResponse paymentResponse = mercadoPagoPaymentProviderRepository.consultPayment(resource);
 
@@ -122,7 +120,7 @@ class MercadoPagoPaymentProviderRepositoryTest {
             String resource = "/9999999991";
             List payments = mock(List.class);
             MercadoPagoOrderPaymentResponse mercadoPagoOrderPaymentResponse = buildMercadoPagoOrderPaymentResponse(payments);
-            when(mercadoPagoClient.consultPaymentDetails(anyString())).thenReturn(ResponseEntity.ok(mercadoPagoOrderPaymentResponse));
+            when(mercadoPagoClient.consultOrderDetails(anyString())).thenReturn(ResponseEntity.ok(mercadoPagoOrderPaymentResponse));
             when(payments.get(0)).thenReturn(null);
 
             PaymentResponse paymentResponse = mercadoPagoPaymentProviderRepository.consultPayment(resource);
@@ -139,7 +137,7 @@ class MercadoPagoPaymentProviderRepositoryTest {
         @Test
         void deveConsultarPagamento_QuandoPagamentoPendente_RetornarNuloParaPagamentoAindaNaoConfirmado() {
             String resource = "/9999999991";
-            when(mercadoPagoClient.consultPaymentDetails(anyString())).thenReturn(ResponseEntity.ok(null));
+            when(mercadoPagoClient.consultOrderDetails(anyString())).thenReturn(ResponseEntity.ok(null));
 
             PaymentResponse paymentResponse = mercadoPagoPaymentProviderRepository.consultPayment(resource);
 

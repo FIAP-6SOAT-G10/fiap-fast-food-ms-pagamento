@@ -5,7 +5,7 @@ import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentRequest;
 
 public interface IPaymentRepository {
 
-    void createPayment(PaymentRequest paymentRequest);
+    Payment createPayment(PaymentRequest paymentRequest);
 
     Payment savePayment(String externalOrderId);
 

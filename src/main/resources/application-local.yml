@@ -4,7 +4,8 @@ spring:
   jpa:
     show-sql: true
 
-
-mercadopago:
-  access_token: ${MP_ACCESS_TOKEN}
-  notification_url: ${MP_NOTIFICATION_URL}
+aws:
+  sqs:
+    payment-requests-queue: payment-requests-queue
+  sns:
+    updates-payments-topic: updates-payments-topic

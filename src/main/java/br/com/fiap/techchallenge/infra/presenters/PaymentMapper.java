@@ -6,12 +6,10 @@ import br.com.fiap.techchallenge.domain.entities.pagamento.enums.PaymentStatusEn
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.PaymentEntity;
 import br.com.fiap.techchallenge.infra.entrypoints.queue.payment.model.PaymentRequestDTO;
 import br.com.fiap.techchallenge.infra.entrypoints.rest.payment.model.PaymentResponseDTO;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Component
 public class PaymentMapper {
     public PaymentRequest fromDataTransferObjetToDomain(PaymentRequestDTO paymentRequestDTO) {
         PaymentRequest paymentRequest = new PaymentRequest();

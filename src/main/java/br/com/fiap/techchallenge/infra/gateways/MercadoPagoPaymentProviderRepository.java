@@ -32,20 +32,25 @@ public class MercadoPagoPaymentProviderRepository implements IPaymentProviderRep
     public Payment createPaymentRequestOnPaymentProvider(Payment payment) {
         log.info("Criando solicitação de pagamento no provedor de pagamentos {}", payment.getInternalPaymentId());
 
-        ResponseEntity<Void> response = mercadoPagoClient.generatePaymentRequest(buildMercadoPagoPaymentRequest(payment));
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException("Erro ao gerar o pagamento com o provedor de pagamentos");
-        }
+        try {
+            ResponseEntity<Void> response = mercadoPagoClient.generatePaymentRequest(buildMercadoPagoPaymentRequest(payment));
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new RuntimeException("Erro ao gerar o pagamento com o provedor de pagamentos");
+            }
 
-        log.info("Solicitação de pagamento gerada com sucesso");
-        return payment;
+            log.info("Solicitação de pagamento gerada com sucesso");
+            return payment;
+        } catch (Exception exception) {
+            log.error("Falha na integração com o meio de pagamento", exception);
+            throw exception;
+        }
     }
 
     @Override
     public PaymentResponse consultPayment(String resource) {
         log.info("Realizando consulta no provedor de pagamentos");
         String orderId = resource.substring(extractOrderIdFromResource(resource));
-        ResponseEntity<MercadoPagoOrderPaymentResponse> response = mercadoPagoClient.consultPaymentDetails(orderId);
+        ResponseEntity<MercadoPagoOrderPaymentResponse> response = mercadoPagoClient.consultOrderDetails(orderId);
 
         MercadoPagoOrderPaymentResponse mercadoPagoOrderPaymentResponse = response.getBody();
         if (isPaymentNotConfirmed(mercadoPagoOrderPaymentResponse)) {

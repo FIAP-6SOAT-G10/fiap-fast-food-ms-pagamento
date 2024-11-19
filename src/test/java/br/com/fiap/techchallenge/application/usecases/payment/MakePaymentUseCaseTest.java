@@ -1,25 +1,21 @@
 package br.com.fiap.techchallenge.application.usecases.payment;
 
-import br.com.fiap.techchallenge.PaymentHelper;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentRequest;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.PaymentEntity;
 import br.com.fiap.techchallenge.infra.gateways.MercadoPagoPaymentProviderRepository;
 import br.com.fiap.techchallenge.infra.gateways.PaymentRepository;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.UUID;
 
 import static br.com.fiap.techchallenge.PaymentHelper.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class MakePaymentUseCaseTest {
