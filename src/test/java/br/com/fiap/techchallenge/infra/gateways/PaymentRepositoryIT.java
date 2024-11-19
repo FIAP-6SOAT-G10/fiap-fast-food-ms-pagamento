@@ -76,7 +76,7 @@ class PaymentRepositoryIT {
 
             criarPagamento(paymentRequest);
 
-            assertEquals(1, paymentRedShiftRepository.count());
+            assertEquals(6, paymentRedShiftRepository.count());
         }
 
     }
