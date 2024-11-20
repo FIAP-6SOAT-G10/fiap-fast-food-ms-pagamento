@@ -1,3 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:redshift://${DB_HOST}:5439/${DB_NAME}

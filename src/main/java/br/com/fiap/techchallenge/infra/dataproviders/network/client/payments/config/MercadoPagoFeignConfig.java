@@ -11,8 +11,10 @@ public class MercadoPagoFeignConfig {
 
     @Bean
     public RequestInterceptor requestInterceptor() {
+        String token = "Bearer ".concat(mercadoPagoAccessToken);
+
         return requestTemplate -> {
-            requestTemplate.header("Authorization", mercadoPagoAccessToken);
+            requestTemplate.header("Authorization", token);
         };
     }
 
