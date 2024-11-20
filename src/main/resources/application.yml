@@ -6,7 +6,7 @@ spring:
   profiles:
     active: '@activeProfile@'
   application:
-    name: payment-microservice
+    name: payments
   datasource:
     url: jdbc:postgresql://localhost:5432/payments
     username: ${DB_USERNAME:tech}
@@ -19,6 +19,8 @@ spring:
     show-sql: true
   flyway:
     schemas: payments
+  devtools:
+    add-properties: false
 
 server:
   servlet:
