@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.infra.entrypoints.rest.payment;
 
 import io.cucumber.java.pt.Dado;
-import io.cucumber.java.pt.Então;
+import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
@@ -9,7 +9,6 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.Suite;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.UUID;
 
@@ -42,12 +41,12 @@ public class PaymentControllerBDD {
         body = response.getBody();
     }
 
-    @Então("os detalhes do pagamento nao devem ser retornados")
+    @Entao("os detalhes do pagamento nao devem ser retornados")
     public void os_detalhes_do_pagamento_nao_devem_ser_retornados() {
         response.then();
     }
 
-    @Então("o codigo {int} deve ser apresentado")
+    @Entao("o codigo {int} deve ser apresentado")
     public void o_codigo_deve_ser_apresentado(Integer httpStatus) {
         response.then().statusCode(httpStatus);
     }

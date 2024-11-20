@@ -35,3 +35,6 @@ build/
 ### JPA Buddy ###
 .jpb
 .jpb/
+
+### Environment ###
+.env

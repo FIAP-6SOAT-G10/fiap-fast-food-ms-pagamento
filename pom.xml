@@ -11,25 +11,10 @@
 
 	<repositories>
 		<repository>
-			<id>central-sonatype</id>
-			<name>Central Sonatype</name>
-			<url>https://repo1.maven.apache.org/maven2</url>
-		</repository>
-		<repository>
 			<id>redshift</id>
 			<url>https://s3.amazonaws.com/redshift-maven-repository/release/</url>
 		</repository>
 	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>central</id>
-			<url>https://repo1.maven.org/maven2</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</pluginRepository>
-	</pluginRepositories>
 
 	<groupId>br.com.fiap</groupId>
 	<artifactId>payment-microservice</artifactId>
@@ -41,14 +26,20 @@
 		<java.version>17</java.version>
 		<spring-cloud.version>2023.0.1</spring-cloud.version>
 		<spring-cloud-aws-dependencies.version>3.1.0</spring-cloud-aws-dependencies.version>
-		<flyway-redshift.version>10.20.1</flyway-redshift.version>
 		<openapi.version>2.2.0</openapi.version>
 		<validation-api.version>2.0.1.Final</validation-api.version>
 		<mercadopago.sdk-java.version>2.1.24</mercadopago.sdk-java.version>
 		<flyway-database-postgresql.version>10.20.1</flyway-database-postgresql.version>
 		<rest-assured.version>5.5.0</rest-assured.version>
 		<cucumber-java.version>7.20.1</cucumber-java.version>
-		<junit-platform-suite-api.version>1.9.3</junit-platform-suite-api.version>
+		<junit-platform-suite.version>1.9.3</junit-platform-suite.version>
+		<junit.version>5.9.3</junit.version>
+		<aspectj.version>1.9.20.1</aspectj.version>
+		<maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+		<flyway-redshift.version>10.20.1</flyway-redshift.version>
+		<redshift.version>2.29.2</redshift.version>
+		<redshift-jdbc42-no-awssdk.version>1.2.47.1071</redshift-jdbc42-no-awssdk.version>
+		<postgresql.version>42.7.4</postgresql.version>
 		<sonar.exclusions>
 			src/main/java/br/com/fiap/techchallenge/application/gateways/**,
 			src/main/java/br/com/fiap/techchallenge/domain/**,
@@ -78,14 +69,31 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>${openapi.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>${validation-api.version}</version>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.xmlunit</groupId>
+					<artifactId>xmlunit-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
@@ -94,11 +102,16 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk18on</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
@@ -113,30 +126,59 @@
 		<dependency>
 			<groupId>io.awspring.cloud</groupId>
 			<artifactId>spring-cloud-aws-starter-sns</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-common</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>io.awspring.cloud</groupId>
 			<artifactId>spring-cloud-aws-starter-sqs</artifactId>
 		</dependency>
+		<!-- correções de vulnerabilidade -->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-common</artifactId>
+			<version>4.1.115.final</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.16.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+			<version>1.78</version>
+		</dependency>
+		<dependency>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-core</artifactId>
+			<version>2.10.0</version>
+		</dependency>
 
 		<!-- dependências de teste unitários -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- dependências de teste integrado -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- dependências de teste integrado -->
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
@@ -153,6 +195,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 		<!-- dependências de teste de comportamento -->
 		<dependency>
 			<groupId>io.cucumber</groupId>
@@ -168,8 +211,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-suite-api</artifactId>
-			<version>${junit-platform-suite-api.version}</version>
+			<artifactId>junit-platform-suite</artifactId>
+			<version>${junit-platform-suite.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -196,15 +239,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.13.0</version>
-				<configuration>
-					<source>17</source>
-					<target>17</target>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
@@ -215,6 +249,32 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<excludes>
+						<exclude>**/bdd/**</exclude>
+					</excludes>
+					<properties>
+						<configurationParameters>
+							junit.jupiter.displayname.generator.default.remove-parent=true
+						</configurationParameters>
+					</properties>
+					<systemPropertyVariables>
+						<junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
+						<allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+					</systemPropertyVariables>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjweaver</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -232,7 +292,7 @@
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>42.7.4</version>
+					<version>${postgresql.version}</version>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -243,7 +303,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
-						<version>3.2.5</version>
+						<version>${maven-surefire-plugin.version}</version>
 						<configuration>
 							<includes combine.self="override">
 								<include>**/*Test.java</include>
@@ -264,7 +324,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
-						<version>3.2.5</version>
+						<version>${maven-surefire-plugin.version}</version>
 						<configuration>
 							<includes combine.self="override">
 								<include>**/*IT.java</include>
@@ -285,7 +345,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
-						<version>3.2.5</version>
+						<version>${maven-surefire-plugin.version}</version>
 						<configuration>
 							<includes combine.self="override">
 								<include>**/PaymentControllerBDD.java</include>
@@ -322,12 +382,12 @@
 				<dependency>
 					<groupId>software.amazon.awssdk</groupId>
 					<artifactId>redshift</artifactId>
-					<version>2.29.2</version>
+					<version>${redshift.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>com.amazon.redshift</groupId>
 					<artifactId>redshift-jdbc42-no-awssdk</artifactId>
-					<version>1.2.47.1071</version>
+					<version>${redshift-jdbc42-no-awssdk.version}</version>
 				</dependency>
 			</dependencies>
 		</profile>
