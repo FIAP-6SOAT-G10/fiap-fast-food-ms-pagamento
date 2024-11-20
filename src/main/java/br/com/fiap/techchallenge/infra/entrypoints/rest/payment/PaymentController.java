@@ -9,7 +9,6 @@ import br.com.fiap.techchallenge.domain.exceptions.PaymentNotFoundException;
 import br.com.fiap.techchallenge.infra.entrypoints.rest.payment.model.PaymentNotification;
 import br.com.fiap.techchallenge.infra.entrypoints.rest.payment.model.PaymentResponseDTO;
 import br.com.fiap.techchallenge.infra.presenters.PaymentMapper;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,6 @@ import static br.com.fiap.techchallenge.infra.utils.ConstantUtil.TOPIC_MERCHANT_
 
 @Slf4j
 @RestController
-@Tag(name = "Payment", description = "Conjunto de operações que podem ser realizadas no contexto do webhook.")
 @RequestMapping("/payments")
 @RequiredArgsConstructor
 public class PaymentController {
@@ -65,8 +63,11 @@ public class PaymentController {
     @GetMapping(path = "/{internalPaymentId}")
     public ResponseEntity<PaymentResponseDTO> getPaymentByInternalPaymentId(@PathVariable("internalPaymentId") String internalPaymentId) {
         log.info("Consultando pagamento {}", internalPaymentId);
-        Payment payment = consultPaymentUseCase.findPaymentById(internalPaymentId);
-        if (payment == null) {
+        Payment payment = null;
+        try {
+            payment = consultPaymentUseCase.findPaymentById(internalPaymentId);
+        } catch (PaymentNotFoundException paymentNotFoundException) {
+            log.error(paymentNotFoundException.getMessage());
             return ResponseEntity.notFound().build();
         }
 

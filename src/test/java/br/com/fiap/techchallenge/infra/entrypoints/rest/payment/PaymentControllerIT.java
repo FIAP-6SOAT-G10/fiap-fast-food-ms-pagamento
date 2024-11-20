@@ -1,32 +1,38 @@
 package br.com.fiap.techchallenge.infra.entrypoints.rest.payment;
 
-import br.com.fiap.techchallenge.domain.exceptions.PaymentAlreadyProcessedException;
-import br.com.fiap.techchallenge.domain.exceptions.PaymentNotFoundException;
 import br.com.fiap.techchallenge.infra.entrypoints.rest.payment.model.PaymentNotification;
-import br.com.fiap.techchallenge.infra.entrypoints.rest.payment.model.PaymentResponseDTO;
+import io.restassured.RestAssured;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static io.restassured.RestAssured.enableLoggingOfRequestAndResponseIfValidationFails;
+import static io.restassured.RestAssured.given;
 
 @Transactional
-@SpringBootTest
-@ActiveProfiles("test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("integration-test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PaymentControllerIT {
 
-    @Autowired
-    private PaymentController paymentController;
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void setup() {
+        RestAssured.port = port;
+        enableLoggingOfRequestAndResponseIfValidationFails();
+    }
 
     @Nested
     class RealizarPagamento {
@@ -34,17 +40,23 @@ class PaymentControllerIT {
         @Test
         void deveRealizarPagamento() {
             String externalOrderId = "1234567892";
-            ResponseEntity<PaymentResponseDTO> response = paymentController.makePayment(externalOrderId);
-
-            assertEquals(HttpStatus.CREATED, response.getStatusCode());
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                    .post("/api/payments/{externalOrderId}/checkout", externalOrderId)
+            .then()
+                    .statusCode(HttpStatus.CREATED.value());
         }
 
         @Test
         void deveLancarExcecaoAoRealizarPagamento() {
             String externalOrderId = "1234567895";
-
-            ResponseEntity<PaymentResponseDTO> response = paymentController.makePayment(externalOrderId);
-            assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                    .post("/api/payments/{externalOrderId}/checkout", externalOrderId)
+            .then()
+                    .statusCode(HttpStatus.NOT_FOUND.value());
         }
 
     }
@@ -58,9 +70,13 @@ class PaymentControllerIT {
             paymentNotification.setTopic("merchant_order");
             paymentNotification.setResource("25069761168");
 
-            ResponseEntity<?> response = paymentController.receivePaymentConfirmation(paymentNotification);
-
-            assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(paymentNotification)
+            .when()
+                    .post("/api/payments/confirmation")
+            .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
         }
 
         @Test
@@ -69,9 +85,13 @@ class PaymentControllerIT {
             paymentNotification.setTopic("merchant_order");
             paymentNotification.setResource("25069761168");
 
-            ResponseEntity<?> response = paymentController.receivePaymentConfirmation(paymentNotification);
-
-            assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(paymentNotification)
+            .when()
+                    .post("/api/payments/confirmation")
+            .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
         }
 
         @Test
@@ -80,7 +100,13 @@ class PaymentControllerIT {
             paymentNotification.setTopic("merchant_order");
             paymentNotification.setResource("25069761169");
 
-            assertThrows(Exception.class, () -> paymentController.receivePaymentConfirmation(paymentNotification));
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(paymentNotification)
+            .when()
+                    .post("/api/payments/confirmation")
+            .then()
+                    .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
 
         @Test
@@ -89,9 +115,11 @@ class PaymentControllerIT {
             paymentNotification.setTopic("payment");
             paymentNotification.setResource("25069761169");
 
-            ResponseEntity<?> response = paymentController.receivePaymentConfirmation(paymentNotification);
-
-            assertNull(response);
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(paymentNotification)
+            .when()
+                    .post("/api/payments/confirmation");
         }
 
         @Test
@@ -100,9 +128,11 @@ class PaymentControllerIT {
             paymentNotification.setTopic("merchant_order");
             paymentNotification.setResource("25152311115");
 
-            ResponseEntity<?> response = paymentController.receivePaymentConfirmation(paymentNotification);
-
-            assertNull(response);
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(paymentNotification)
+            .when()
+                    .post("/api/payments/confirmation");
         }
 
     }
@@ -112,19 +142,25 @@ class PaymentControllerIT {
 
         @Test
         void deveConsultarPagamento() {
-            String internalPaymentId = UUID.fromString("2baa836d-186f-481f-b3a7-341c9c788602").toString();
-
-            ResponseEntity<PaymentResponseDTO> response = paymentController.getPaymentByInternalPaymentId(internalPaymentId);
-
-            assertNotNull(response);
-            assertEquals(HttpStatus.OK, response.getStatusCode());
+            String internalPaymentId = "2baa836d-186f-481f-b3a7-341c9c788602";
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                    .get("/api/payments/{internalPaymentId}", internalPaymentId)
+            .then()
+                    .statusCode(HttpStatus.OK.value());
         }
 
         @Test
         void deveConsultarPagamento_RetornarNaoEncontrado_QuandoPagamentoNaoExistir() {
             String internalPaymentId = UUID.fromString("2baa836d-186f-481f-b3a7-341c9c788603").toString();
 
-            assertThrows(IllegalArgumentException.class, () -> paymentController.getPaymentByInternalPaymentId(internalPaymentId));
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                    .get("/api/payments/{internalPaymentId}", internalPaymentId)
+            .then()
+                    .statusCode(HttpStatus.NOT_FOUND.value());
         }
 
     }

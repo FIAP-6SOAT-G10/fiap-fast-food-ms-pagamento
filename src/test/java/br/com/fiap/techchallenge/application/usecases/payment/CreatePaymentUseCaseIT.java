@@ -13,7 +13,7 @@ import static br.com.fiap.techchallenge.PaymentHelper.buildPaymentRequest;
 
 @Transactional
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("integration-test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CreatePaymentUseCaseIT {
 

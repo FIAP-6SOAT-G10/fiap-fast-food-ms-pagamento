@@ -18,7 +18,7 @@ import static br.com.fiap.techchallenge.PaymentHelper.*;
 
 @Transactional
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("integration-test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class NotifyPaymentConsumerUseCaseIT {
 
