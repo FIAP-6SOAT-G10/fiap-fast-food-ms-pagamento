@@ -3,6 +3,6 @@ services:
     container_name: payments
     build:
       context: .
-    image: fiap_fast_food_app/payments:1.0
+    image: 317575625452.dkr.ecr.us-east-1.amazonaws.com/payments:1.0
     ports:
       - "8080:8080"
