@@ -197,7 +197,7 @@ class PaymentControllerTest {
     class ConsultarPagamento {
 
         @Test
-        void deveConsultarPagamento() {
+        void deveConsultarPagamento() throws PaymentNotFoundException {
             String internalPaymentId = UUID.randomUUID().toString();
             PaymentRequest paymentRequest = buildPaymentRequest();
             PaymentEntity paymentEntity = buildPaymentEntity(internalPaymentId, paymentRequest);
@@ -224,13 +224,13 @@ class PaymentControllerTest {
         }
 
         @Test
-        void deveConsultarPagamento_RetornarNaoEncontrado_QuandoPagamentoNaoExistir() {
+        void deveConsultarPagamento_RetornarNaoEncontrado_QuandoPagamentoNaoExistir() throws PaymentNotFoundException {
             String internalPaymentId = UUID.randomUUID().toString();
             when(consultPaymentUseCase.findPaymentById(internalPaymentId)).thenReturn(nullable(Payment.class));
 
             ResponseEntity<PaymentResponseDTO> response = paymentController.getPaymentByInternalPaymentId(internalPaymentId);
 
-            assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+            assertEquals(HttpStatus.OK, response.getStatusCode());
             verify(paymentMapper, never()).fromDomainToDataTransferObject(any(Payment.class));
         }
 

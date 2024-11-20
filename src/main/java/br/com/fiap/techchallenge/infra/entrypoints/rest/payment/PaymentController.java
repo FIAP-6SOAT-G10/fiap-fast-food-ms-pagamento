@@ -65,8 +65,11 @@ public class PaymentController {
     @GetMapping(path = "/{internalPaymentId}")
     public ResponseEntity<PaymentResponseDTO> getPaymentByInternalPaymentId(@PathVariable("internalPaymentId") String internalPaymentId) {
         log.info("Consultando pagamento {}", internalPaymentId);
-        Payment payment = consultPaymentUseCase.findPaymentById(internalPaymentId);
-        if (payment == null) {
+        Payment payment = null;
+        try {
+            payment = consultPaymentUseCase.findPaymentById(internalPaymentId);
+        } catch (PaymentNotFoundException paymentNotFoundException) {
+            log.error(paymentNotFoundException.getMessage());
             return ResponseEntity.notFound().build();
         }
 

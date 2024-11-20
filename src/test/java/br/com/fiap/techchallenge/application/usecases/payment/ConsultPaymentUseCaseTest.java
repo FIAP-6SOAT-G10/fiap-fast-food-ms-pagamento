@@ -3,6 +3,7 @@ package br.com.fiap.techchallenge.application.usecases.payment;
 import br.com.fiap.techchallenge.PaymentHelper;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentRequest;
+import br.com.fiap.techchallenge.domain.exceptions.PaymentNotFoundException;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.PaymentEntity;
 import br.com.fiap.techchallenge.infra.gateways.PaymentRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -33,7 +34,7 @@ class ConsultPaymentUseCaseTest {
     }
 
     @Test
-    void deveRetornarPagamento_QuandoRealizarConsultaDePagamento() {
+    void deveRetornarPagamento_QuandoRealizarConsultaDePagamento() throws PaymentNotFoundException {
         String internalPaymentId = UUID.randomUUID().toString();
         PaymentRequest paymentRequest = PaymentHelper.buildPaymentRequest();
         PaymentEntity paymentEntity = PaymentHelper.buildPaymentEntity(internalPaymentId, paymentRequest);
@@ -53,9 +54,9 @@ class ConsultPaymentUseCaseTest {
         PaymentEntity paymentEntity = PaymentHelper.buildPaymentEntity(internalPaymentId, paymentRequest);
         when(paymentRepository.findPayment(internalPaymentId)).thenThrow(new IllegalArgumentException("Pagamento não encontrado"));
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> consultPaymentUseCase.findPaymentById(internalPaymentId));
+        PaymentNotFoundException exception = assertThrows(PaymentNotFoundException.class, () -> consultPaymentUseCase.findPaymentById(internalPaymentId));
 
-        assertEquals("Pagamento não encontrado", exception.getMessage());
+        assertEquals("O pagamento " + internalPaymentId + " não foi localizado.", exception.getMessage());
         verify(paymentRepository, times(1)).findPayment(anyString());
     }
 

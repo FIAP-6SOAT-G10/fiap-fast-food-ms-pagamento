@@ -1,6 +1,7 @@
 package br.com.fiap.techchallenge.application.usecases.payment;
 
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
+import br.com.fiap.techchallenge.domain.exceptions.PaymentNotFoundException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("integration-test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ConsultPaymentUseCaseIT {
 
@@ -23,7 +24,7 @@ class ConsultPaymentUseCaseIT {
     private ConsultPaymentUseCase consultPaymentUseCase;
 
     @Test
-    void deveRetornarPagamento_QuandoRealizarConsultaDePagamento() {
+    void deveRetornarPagamento_QuandoRealizarConsultaDePagamento() throws PaymentNotFoundException {
         String internalPaymentId = UUID.fromString("c1078c7e-d1f7-4490-853e-f7a4ded0fe3e").toString();
         Payment payment = consultPaymentUseCase.findPaymentById(internalPaymentId);
 
@@ -35,7 +36,7 @@ class ConsultPaymentUseCaseIT {
     void deveLancarExcecao_QuandoRealizarConsultaDePagamento_IdentificadorNaoEncontrado() {
         String internalPaymentId = UUID.fromString("c1078c7e-d1f7-4490-853e-f7a4ded0fe3f").toString();
 
-        assertThrows(IllegalArgumentException.class, () -> consultPaymentUseCase.findPaymentById(internalPaymentId));
+        assertThrows(PaymentNotFoundException.class, () -> consultPaymentUseCase.findPaymentById(internalPaymentId));
     }
 
 }
