@@ -1,19 +1,26 @@
+application:
+  title: Payments
+  version: 1.0
+
 spring:
   profiles:
     active: '@activeProfile@'
   application:
-    name: tech-challenge
+    name: payments
   datasource:
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/payments
+    username: ${DB_USERNAME:tech}
+    password: ${DB_PASSWORD:tech_passwd}
   jpa:
     properties:
       hibernate:
-        default_schema: tech-challenge
+        default_schema: payments
         enable_lazy_load_no_trans: true
-    show-sql: false
+    show-sql: true
   flyway:
-    schemas: tech-challenge
+    schemas: payments
+  devtools:
+    add-properties: false
 
 server:
   servlet:
@@ -26,6 +33,17 @@ springdoc:
   swagger-ui:
   path: swagger-ui-custom.html
 
-mercadopago:
-  access_token: ${MP_ACCESS_TOKEN:TEST-2194493215547460-072323-e7020fc0d11389fdae3dc86c6b9a1e4f-115466963}
-  notification_url: ${MP_NOTIFICATION_URL:https://614f-2804-7f0-bec0-2fa7-4d18-dc53-6657-d0ff.ngrok-free.app/pedidos/mercadopago/notifications}
+feign:
+  client:
+    mercado-pago:
+      url: https://api.mercadopago.com
+
+mercado-pago:
+  access-token: ${MP_ACCESS_TOKEN:APP_USR-1280609204491025-110319-0ef38ce64565a1827397a0d8f027da22-2076431474}
+  notification-url: ${MP_NOTIFICATION_URL:https://46d2-2804-7f0-9382-1dd9-298c-add4-fac7-c73c.ngrok-free.app/api/payments/confirmation}
+
+aws:
+  sqs:
+    payment-requests-queue: payment-requests-queue
+  sns:
+    updates-payments-topic: updates-payments-topic

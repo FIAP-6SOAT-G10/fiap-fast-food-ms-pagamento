@@ -182,7 +182,7 @@ ngrok http 8080
 Na raiz do projeto, execute o seguinte comando para criar o container com o banco de dados Postgres:
 
 ```bash
-docker run --name=postgres -p 5432:5432 -e POSTGRES_USER=tech -e POSTGRES_PASSWORD=tech_passwd -d postgres
+docker run --name=postgres -p 5432:5432 -e POSTGRES_USER=tech -e POSTGRES_PASSWORD=tech_passwd -e POSTGRES_DB=payments -d postgres
 ```
 
 ### Passo 2: Compilar o projeto
