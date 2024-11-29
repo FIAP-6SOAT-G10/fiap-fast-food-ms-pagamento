@@ -140,7 +140,11 @@ jobs:
         run: make production
 
       - name: Docker
-        run: docker-compose build payments
+        run: |
+          docker-compose build payments 
+            --build-arg awsAccessKeyId=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            --build-arg awsSecretAccessKey=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            --build-arg awsSessionToken=${{ secrets.AWS_SESSION_TOKEN }}
 
       - name: Get Docker Image ID
         id: image_id
