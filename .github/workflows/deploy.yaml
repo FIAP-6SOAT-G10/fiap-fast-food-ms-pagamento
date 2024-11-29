@@ -108,7 +108,7 @@ jobs:
       - name: Run system tests
         run: make system-test
 
-  build-and-deploy:
+  build:
     needs: system-tests
     runs-on: ubuntu-latest
 
@@ -162,3 +162,15 @@ jobs:
 
       - name: Update kubeconfig for EKS
         run: aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name fiap_fast_food_eks
+
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Microservice on K8S
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.TARGET_REPO_PAT }}
+          repository: FIAP-6SOAT-G10/fiap-fast-food-ms-pagamento
+          event-type: trigger-deploy
