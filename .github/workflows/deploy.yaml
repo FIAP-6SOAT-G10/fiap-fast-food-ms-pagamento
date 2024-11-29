@@ -177,5 +177,5 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.TARGET_REPO_PAT }}
-          repository: FIAP-6SOAT-G10/fiap-fast-food-ms-pagamento
+          repository: FIAP-6SOAT-G10/fiap-fast-food-ms-pagamento-k8s
           event-type: trigger-deploy
