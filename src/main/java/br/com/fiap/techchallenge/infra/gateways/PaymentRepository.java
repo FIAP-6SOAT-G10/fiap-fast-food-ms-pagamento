@@ -7,12 +7,14 @@ import br.com.fiap.techchallenge.domain.entities.pagamento.enums.PaymentStatusEn
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.PaymentEntity;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentRedShiftRepository;
 import br.com.fiap.techchallenge.infra.presenters.PaymentMapper;
+import br.com.fiap.techchallenge.infra.utils.ConstantUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
 @Slf4j
 public class PaymentRepository implements IPaymentRepository {
+
 
     private final PaymentMapper paymentMapper;
     private final PaymentRedShiftRepository paymentRedShiftRepository;
@@ -33,7 +35,7 @@ public class PaymentRepository implements IPaymentRepository {
         log.info("Gravando pagamento {}",  externalOrderId);
         Optional<PaymentEntity> paymentEntityOptional = this.paymentRedShiftRepository.findByExternalId(externalOrderId);
         if (paymentEntityOptional.isEmpty()) {
-            throw new IllegalArgumentException("Pagamento não encontrado");
+            throw new IllegalArgumentException(ConstantUtil.PAYMENT_NOT_FOUND_ERROR);
         }
 
         PaymentEntity paymentEntity = paymentEntityOptional.get();
@@ -47,7 +49,7 @@ public class PaymentRepository implements IPaymentRepository {
         log.info("Recuperando pagamento do banco de dados");
         Optional<PaymentEntity> paymentEntityOptional = findPaymentByInternalPaymentId(internalPaymentId);
         if (paymentEntityOptional.isEmpty()) {
-            throw new IllegalArgumentException("Pagamento não encontrado");
+            throw new IllegalArgumentException(ConstantUtil.PAYMENT_NOT_FOUND_ERROR);
         }
 
         return paymentMapper.fromEntityToDomain(paymentEntityOptional.get());
@@ -58,7 +60,7 @@ public class PaymentRepository implements IPaymentRepository {
         log.info("Finalizando o pagamento");
         Optional<PaymentEntity> paymentEntityOptional = findPaymentByInternalPaymentId(payment.getInternalPaymentId());
         if (paymentEntityOptional.isEmpty()) {
-            throw new IllegalArgumentException("Pagamento não encontrado");
+            throw new IllegalArgumentException(ConstantUtil.PAYMENT_NOT_FOUND_ERROR);
         }
 
         PaymentEntity paymentEntity = paymentEntityOptional.get();

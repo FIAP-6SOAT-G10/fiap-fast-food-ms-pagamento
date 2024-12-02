@@ -42,7 +42,7 @@ public class PaymentController {
     }
 
     @PostMapping(path = "/confirmation")
-    public ResponseEntity<?> receivePaymentConfirmation(@RequestBody PaymentNotification paymentNotification) {
+    public ResponseEntity receivePaymentConfirmation(@RequestBody PaymentNotification paymentNotification) {
         log.info("Estímulo recebido via Webhook {}", paymentNotification);
         if (isCallbackFromMerchantOrderTopic(paymentNotification)) {
             try {

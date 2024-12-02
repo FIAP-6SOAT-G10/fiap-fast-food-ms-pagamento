@@ -37,7 +37,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn sonar:sonar -Dsonar.projectKey=fiap-fast-food-ms-pagamento -Dsonar.organization=fiap-6soat-g10-1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          mvn sonar:sonar -Dsonar.projectKey=fiap-fast-food-ms-pagamento -Dsonar.organization=fiap-6soat-g10-1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
   unit-tests:
     runs-on: ubuntu-latest

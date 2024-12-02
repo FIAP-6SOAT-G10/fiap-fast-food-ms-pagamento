@@ -3,7 +3,6 @@ package br.com.fiap.techchallenge.application.usecases.payment;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import br.com.fiap.techchallenge.domain.exceptions.PaymentNotFoundException;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

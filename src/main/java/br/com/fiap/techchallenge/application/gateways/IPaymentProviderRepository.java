@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.application.gateways;
 
-import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentResponse;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
+import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentResponse;
 
 public interface IPaymentProviderRepository {
 
