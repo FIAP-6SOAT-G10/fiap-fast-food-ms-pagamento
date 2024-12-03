@@ -306,7 +306,7 @@
 							<excludes>
 								<exclude>**/AWSConfig.*</exclude>
 								<exclude>**/PaymentConfig.java</exclude>
-								<exclude>**/CustomerController.*</exclude>
+								<exclude>**/PaymentController.*</exclude>
 								<exclude>**/PaymentMicroserviceApplication.java</exclude>
 								<exclude>**/PaymentMicroserviceApplicationTests.java</exclude>
 								<exclude>**/PaymentMicroserviceApplicationIT.java</exclude>
@@ -364,6 +364,19 @@
 							</excludes>
 						</configuration>
 					</plugin>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco-maven-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -408,6 +421,45 @@
 								</configurationParameters>
 							</properties>
 						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>cov</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco-maven-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<formats>
+										<format>XML</format>
+									</formats>
+									<excludes>
+										<exclude>**/AWSConfig.*</exclude>
+										<exclude>**/PaymentConfig.java</exclude>
+										<exclude>**/PaymentController.*</exclude>
+										<exclude>**/PaymentMicroserviceApplication.java</exclude>
+										<exclude>**/PaymentMicroserviceApplicationTests.java</exclude>
+										<exclude>**/PaymentMicroserviceApplicationIT.java</exclude>
+									</excludes>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
