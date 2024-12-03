@@ -106,7 +106,7 @@ class PaymentControllerIT {
             .when()
                     .post("/api/payments/confirmation")
             .then()
-                    .body(Matchers.empty());
+                    .body(Matchers.blankOrNullString());
         }
 
         @Test
@@ -121,7 +121,7 @@ class PaymentControllerIT {
             .when()
                     .post("/api/payments/confirmation")
             .then()
-                    .body(Matchers.empty());
+                    .body(Matchers.blankOrNullString());
         }
 
     }
