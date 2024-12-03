@@ -306,10 +306,7 @@
 							<excludes>
 								<exclude>**/AWSConfig.*</exclude>
 								<exclude>**/PaymentConfig.java</exclude>
-								<exclude>**/PaymentController.*</exclude>
 								<exclude>**/PaymentMicroserviceApplication.java</exclude>
-								<exclude>**/PaymentMicroserviceApplicationTests.java</exclude>
-								<exclude>**/PaymentMicroserviceApplicationIT.java</exclude>
 							</excludes>
 						</configuration>
 					</execution>
