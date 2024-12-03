@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ConfirmPaymentUseCaseIT {
 
     @Autowired
-    private ConfirmPaymentUseCase confirmPaymentUseCase;
+    ConfirmPaymentUseCase confirmPaymentUseCase;
 
     @Test
     void deveRetornarNuloAoConfirmarPagamento_QuandoPagamentoNaoRealizado() throws PaymentAlreadyProcessedException, PaymentNotFoundException {
@@ -46,13 +46,6 @@ class ConfirmPaymentUseCaseIT {
 
     @Test
     void deveLancarExcecaoAoConfirmarPagamento_QuandoPagamentoJaProcessado_PagamentoNegado() throws PaymentAlreadyProcessedException, PaymentNotFoundException {
-        String resource = "/25055072471";
-
-        assertNull(confirmPaymentUseCase.execute(resource));
-    }
-
-    @Test
-    void deveConfirmarPagamento_QuandoPagamentoNaoAutorizado_SituacaoNegado() throws PaymentAlreadyProcessedException, PaymentNotFoundException {
         String resource = "/25055072471";
 
         assertNull(confirmPaymentUseCase.execute(resource));

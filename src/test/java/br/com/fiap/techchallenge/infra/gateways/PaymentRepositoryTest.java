@@ -81,7 +81,9 @@ class PaymentRepositoryTest {
             PaymentEntity paymentEntity = buildPaymentEntity(UUID.randomUUID().toString(), paymentRequest);
             when(paymentRedShiftRepository.findByExternalId(paymentEntity.getExternalId())).thenReturn(Optional.empty());
 
-            Exception exception = assertThrows(IllegalArgumentException.class, () -> paymentRepository.savePayment(paymentRequest.getExternalOrderId()));
+            String externalOrderId = paymentRequest.getExternalOrderId();
+
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> paymentRepository.savePayment(externalOrderId));
             assertEquals("Pagamento não encontrado", exception.getMessage());
             verify(paymentRedShiftRepository, never()).save(any(PaymentEntity.class));
         }
@@ -109,9 +111,10 @@ class PaymentRepositoryTest {
         void deveLancarExcecao_AoRecuperarPagamento_QuandoPagamentoNaoForEncontrado_IdentificadorInternoNaoExiste() {
             PaymentRequest paymentRequest = buildPaymentRequest();
             PaymentEntity paymentEntity = buildPaymentEntity(UUID.randomUUID().toString(), paymentRequest);
-            when(paymentRedShiftRepository.findById(paymentEntity.getInternalPaymentId())).thenReturn(Optional.empty());
+            String internalPaymentId = paymentEntity.getInternalPaymentId();
+            when(paymentRedShiftRepository.findById(internalPaymentId)).thenReturn(Optional.empty());
 
-            Exception exception = assertThrows(IllegalArgumentException.class, () -> paymentRepository.findPayment(paymentEntity.getInternalPaymentId()));
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> paymentRepository.findPayment(internalPaymentId));
 
             assertEquals("Pagamento não encontrado", exception.getMessage());
             verify(paymentMapper, never()).fromEntityToDomain(any(PaymentEntity.class));

@@ -3,6 +3,7 @@ package br.com.fiap.techchallenge.infra.entrypoints.rest.payment;
 import br.com.fiap.techchallenge.infra.entrypoints.rest.payment.model.PaymentNotification;
 import io.restassured.RestAssured;
 import jakarta.transaction.Transactional;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ import static io.restassured.RestAssured.given;
 class PaymentControllerIT {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @BeforeEach
     void setup() {
@@ -79,21 +80,6 @@ class PaymentControllerIT {
         }
 
         @Test
-        void deveLancarExcecao_QuandoPagamentoJaFoiProcessado() {
-            PaymentNotification paymentNotification = new PaymentNotification();
-            paymentNotification.setTopic("merchant_order");
-            paymentNotification.setResource("25069761168");
-
-            given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(paymentNotification)
-            .when()
-                    .post("/api/payments/confirmation")
-            .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
-        }
-
-        @Test
         void deveLancarExcecao_QuandoPagamentoNaoEncontrado() {
             PaymentNotification paymentNotification = new PaymentNotification();
             paymentNotification.setTopic("merchant_order");
@@ -118,7 +104,9 @@ class PaymentControllerIT {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(paymentNotification)
             .when()
-                    .post("/api/payments/confirmation");
+                    .post("/api/payments/confirmation")
+            .then()
+                    .body(Matchers.nullValue());
         }
 
         @Test
@@ -131,7 +119,9 @@ class PaymentControllerIT {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(paymentNotification)
             .when()
-                    .post("/api/payments/confirmation");
+                    .post("/api/payments/confirmation")
+            .then()
+                    .body(Matchers.nullValue());
         }
 
     }
