@@ -79,7 +79,7 @@ public class PaymentConfig {
     }
 
     @Bean
-    public SqsMessageListenerContainerFactory<PaymentRequest> sqsMessageListenerContainerFactory(SqsAsyncClient sqsAsyncClient) {
+    public SqsMessageListenerContainerFactory<PaymentRequest> defaultSqsListenerContainerFactory(SqsAsyncClient sqsAsyncClient) {
         SqsMessagingMessageConverter sqsMessagingMessageConverter = new SqsMessagingMessageConverter();
         sqsMessagingMessageConverter.setPayloadTypeMapper(m -> null);
 
