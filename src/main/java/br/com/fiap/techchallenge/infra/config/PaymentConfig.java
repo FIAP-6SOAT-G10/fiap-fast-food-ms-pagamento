@@ -4,6 +4,7 @@ import br.com.fiap.techchallenge.application.gateways.INotificationRepository;
 import br.com.fiap.techchallenge.application.gateways.IPaymentProviderRepository;
 import br.com.fiap.techchallenge.application.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.application.usecases.payment.*;
+import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentRequest;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.repository.PaymentRedShiftRepository;
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.MercadoPagoClient;
 import br.com.fiap.techchallenge.infra.gateways.MercadoPagoPaymentProviderRepository;
@@ -11,9 +12,12 @@ import br.com.fiap.techchallenge.infra.gateways.NotificationRepository;
 import br.com.fiap.techchallenge.infra.gateways.PaymentRepository;
 import br.com.fiap.techchallenge.infra.presenters.PaymentMapper;
 import io.awspring.cloud.sns.core.SnsTemplate;
+import io.awspring.cloud.sqs.config.SqsMessageListenerContainerFactory;
+import io.awspring.cloud.sqs.support.converter.SqsMessagingMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
 @Configuration
 public class PaymentConfig {
@@ -72,6 +76,17 @@ public class PaymentConfig {
     @Bean
     public PaymentMapper buildPaymentMapper() {
         return new PaymentMapper();
+    }
+
+    @Bean
+    public SqsMessageListenerContainerFactory<PaymentRequest> sqsMessageListenerContainerFactory(SqsAsyncClient sqsAsyncClient) {
+        SqsMessagingMessageConverter sqsMessagingMessageConverter = new SqsMessagingMessageConverter();
+        sqsMessagingMessageConverter.setPayloadTypeMapper(m -> null);
+
+        return SqsMessageListenerContainerFactory.<PaymentRequest>builder()
+                .configure(options -> options.messageConverter(sqsMessagingMessageConverter))
+                .sqsAsyncClient(sqsAsyncClient)
+                .build();
     }
 
 }

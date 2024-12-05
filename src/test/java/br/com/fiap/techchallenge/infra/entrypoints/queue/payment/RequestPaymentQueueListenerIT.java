@@ -11,8 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -32,8 +30,7 @@ class RequestPaymentQueueListenerIT {
         paymentRequestDTO.setPayer(RandomStringUtils.randomAlphabetic(22));
         paymentRequestDTO.setPaymentAmount(BigDecimal.valueOf(Math.random() * 100).setScale(2, RoundingMode.CEILING));
 
-        Map<String, String> map = new HashMap<>();
-        requestPaymentQueueListener.listen(map, paymentRequestDTO);
+        requestPaymentQueueListener.listen(paymentRequestDTO);
 
         assertNotNull(paymentRequestDTO);
     }

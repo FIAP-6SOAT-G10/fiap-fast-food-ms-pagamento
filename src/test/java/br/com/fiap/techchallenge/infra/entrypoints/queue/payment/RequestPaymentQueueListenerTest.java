@@ -13,8 +13,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -48,8 +46,7 @@ class RequestPaymentQueueListenerTest {
         paymentRequest.setPaymentAmount(paymentRequestDTO.getPaymentAmount());
         when(paymentMapper.fromDataTransferObjetToDomain(paymentRequestDTO)).thenReturn(paymentRequest);
 
-        Map<String, String> map = new HashMap<>();
-        requestPaymentQueueListener.listen(map, paymentRequestDTO);
+        requestPaymentQueueListener.listen(paymentRequestDTO);
 
         verify(paymentMapper, times(1)).fromDataTransferObjetToDomain(paymentRequestDTO);
         verify(createPaymentUseCase, times(1)).execute(any(PaymentRequest.class));

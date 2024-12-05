@@ -7,11 +7,7 @@ import br.com.fiap.techchallenge.infra.presenters.PaymentMapper;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.Headers;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -22,7 +18,7 @@ public class RequestPaymentQueueListener {
     private final CreatePaymentUseCase createPaymentUseCase;
 
     @SqsListener("${aws.sqs.payment-requests-queue}")
-    public void listen(@Headers Map<String, String> headers, @Payload PaymentRequestDTO paymentRequestDTO) {
+    public void listen(PaymentRequestDTO paymentRequestDTO) {
         log.info("Mensagem recebida da fila {}", paymentRequestDTO);
 
         PaymentRequest paymentRequest = paymentMapper.fromDataTransferObjetToDomain(paymentRequestDTO);
