@@ -32,7 +32,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Install dependencies
-        run: mvn install -DskipTests -q
+        run: mvn clean install -DskipTests -q
 
       - name: Run unit tests
         run: make unit-test
@@ -80,7 +80,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Install dependencies
-        run: mvn install -DskipTests -q
+        run: mvn clean install -DskipTests -q
 
       - name: Run integration tests
         run: make integration-test
@@ -114,7 +114,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Install dependencies
-        run: mvn install -DskipTests -q
+        run: mvn clean install -DskipTests -q
 
       - name: Start application
         run: mvn spring-boot:run
