@@ -22,7 +22,7 @@ public class RequestPaymentQueueListener {
     private final CreatePaymentUseCase createPaymentUseCase;
 
     @SqsListener("${aws.sqs.payment-requests-queue}")
-    public void listen(@Payload PaymentRequestDTO paymentRequestDTO) {
+    public void listen(@Headers Map<String, String> headers, @Payload PaymentRequestDTO paymentRequestDTO) {
         log.info("Mensagem recebida da fila {}", paymentRequestDTO);
 
         PaymentRequest paymentRequest = paymentMapper.fromDataTransferObjetToDomain(paymentRequestDTO);
