@@ -43,6 +43,8 @@ Para solucionar o problema, a lanchonete irá investir em um sistema de autoaten
 
 ### [Vídeo da Fase 2](https://www.youtube.com/watch?v=y4m8ueFRydw)
 ### [Vídeo da Fase 3](https://www.youtube.com/watch?v=WleicW8Sx58)
+### [Vídeo da Fase 4](https://www.youtube.com/watch?v=WleicW8Sx58)
+
 
 <a id="documentacao"></a>
 ## Documentação do Projeto com Event Storming
@@ -86,6 +88,19 @@ A arquitetura do sistema descrita envolve duas principais componentes: a aplica�
 
 ## Arquitetura da Infraestrutura na Nuvem
 <img height="500" src="src/main/resources/img/arquitetura-cloud.png" title="Fiap Arquitetura Cloud" width="1195"/>
+
+## Atualização da Arquitetura
+A princípio nosso sistema foi desenvolvido no formato monolito para atender aos requisitos porém utilizando arquitetura Hexagonal e posteriormente, Clean Architecture. Assim sendo, a nossa arquitetura estava assim:
+
+<img height="500" src="src/main/resources/img/arquitetura-monolito.png" title="Fiap Arquitetura Monolito" width="1195"/>
+
+Na fase 4, nos foi solicitada a divisão do nosso monolito em serviços menores com contextos delimitados bem definidos. Tão logo recebemos a demanda, planejamos a separação da seguinte forma:
+
+<img height="500" src="src/main/resources/img/separacao-microservices.png" title="Separação de Arquitetura" width="1195"/>
+
+Por fim fizemos a separação de responsabilidades por contextos delimitados bem definidos, criando assim a arquitetura em microserviços.
+
+<img height="500" src="src/main/resources/img/arquitetura-ms.png" title="Fiap Arquitetura Microservices" width="1195"/>
 
 <a id="requisito"></a>
 ## Requisitos para Execução
@@ -143,37 +158,21 @@ ngrok http 8080
 
 ### Atualizar a Variável _mercadopago.notification_url_:
 
-Copie a URL gerada pelo Ngrok (algo como https://<subdomínio>.ngrok.io) e atualize a variável mercadopago.notification_url no seu arquivo de configuração:
-```mercadopago.notification_url=https://<subdomínio>.ngrok.io/webhook/notifications ```
+Copie a URL gerada pelo Ngrok (algo como https://<subdomínio>.ngrok.io) e atualize e crie a variável MP_NOTIFICATION_URL atribuindo à variável o valor do NGrok:
+```MP_NOTIFICATION_URL=https://<subdomínio>.ngrok.io/api/payments/confirmation ```
 
 ### Funcionamento do Webhook de Notificações do Mercado Pago
 
 ### Recebimento de Notificações:  
 
-O Mercado Pago envia notificações para a URL configurada ```(mercadopago.notification_url)``` sempre que há uma atualização no status de um pagamento.
+O Mercado Pago envia notificações para a URL configurada ```(MP_NOTIFICATION_URL)``` sempre que há uma atualização no status de um pagamento.
 
 ### Endpoint de Webhook:  
-O endpoint ```/webhook/notifications``` recebe essas notificações e processa as informações enviadas pelo Mercado Pago.
+O endpoint ```/api/payments/confirmation``` recebe essas notificações e processa as informações enviadas pelo Mercado Pago.
 
 ### Processamento da Notificação:  
 
-O controlador WebhookController lida com as notificações recebidas. Ele verifica a ação (action) e, se for payment.updated, consulta o status do pagamento e atualiza o status do pedido no sistema.
-
-### Exemplo de Notificação:
-
-Uma notificação típica contém informações sobre o pagamento, como o ID do pagamento e a ação realizada (payment.updated).
-
-### Exemplo de Configuração do Webhook no application.properties:
-
-```mercadopago.notification_url=https://<subdomínio>.ngrok.io/webhook/notifications```
-
-### Exemplo de Uso do Ngrok
-
-Iniciar o Ngrok:
-
-```sh 
-ngrok http 8080
-```
+O controlador PaymentController lida com as notificações recebidas. Ele verifica a ação (action) e, se for payment.updated, consulta o status do pagamento e atualiza o status do pedido no sistema.
 
 <a id="execucao-local"></a>
 ## Execução do projeto localmente
@@ -188,7 +187,7 @@ docker run --name=postgres -p 5432:5432 -e POSTGRES_USER=tech -e POSTGRES_PASSWO
 ### Passo 2: Compilar o projeto
 Após a criação do container do Postgres, você deve realizar o build do projeto utilizando o Maven:
 ```bash
-mvn clean install -DskipTests -Plocal -q
+mvn clean install -DskipTests -Pdev -q
 ```
 
 ### Passo 3: Executar o projeto
@@ -211,64 +210,41 @@ docker-compose up -d
 A documentação da API pode ser acessada através do Swagger em: [http://localhost:8080/api/swagger-ui.html](`http://localhost:8080/api/swagger-ui.html`)
 
 ### Testes
+
+#### Testes Unitários
 Para executar os testes unitários, basta executar o comando abaixo:
 
-`mvn test`
+`make unit-test`
+
+#### Testes Integrados
+`make integration-test`
+
+#### Testes Sistêmicos
+`make system-test`
 
 ### Observações
 - O arquivo `application.yml` contém as configurações de conexão com o banco de dados. Caso seja necessário alterar a porta do banco de dados, basta alterar a propriedade `spring.datasource.url` no arquivo `application.yml`.
+- Os testes integrados batem na fila do SQS, consequentemente elas precisam estar criadas e disponíveis para execução dos testes.
+- Os testes sistêmicos batem no Mercado Pago, consequentemente precisa estar configurado para que a integração funcione corretamente.
 
 <a id="rota"></a>
 ## Rotas da API
 Abaixo está descrito todas as rotas fornecidas da aplicação, bem como seu objetivo e possíveis códigos de retorno:
 
-### Rotas de Categorias
-- `GET /categorias`: Retorna a lista de categorias de produtos cadastradas no sistema.
-
-### Rotas de Clientes
-- `POST /clientes`: Cria um novo cliente. Retorna 201 se for bem-sucedido, 400 se houver uma solicitação ruim e 500 para erros internos do servidor.
-- `GET /clientes`: Retorna uma lista de todos os clientes. Retorna 200 se for bem-sucedido, 204 se nenhum conteúdo for encontrado e 500 para erros internos do servidor.
-- `PATCH /clientes`: Atualiza os dados do cliente. Retorna 200 se for bem-sucedido, 400 se houver uma solicitação ruim, 404 se não for encontrado e 500 para erros internos do servidor.
-- `PUT /clientes`: Atualiza um cliente. Retorna 204 se for bem-sucedido, 400 se houver uma solicitação ruim, 404 se não for encontrado e 500 para erros internos do servidor.
-
-### Rotas de Produtos
-- `POST /produtos`: Cria um novo produto. Retorna 201 se for bem-sucedido, 400 se houver uma solicitação ruim e 500 para erros internos do servidor.
-- `GET /produtos`: Retorna uma lista de todos os produtos. Retorna 200 se for bem-sucedido, 204 se nenhum conteúdo for encontrado e 500 para erros internos do servidor.
-- `PATCH /produtos/{id}`: Atualiza os dados do produto. Retorna 200 se for bem-sucedido, 400 se houver uma solicitação ruim, 404 se não for encontrado e 500 para erros internos do servidor.
-- `PUT /produtos/{id}`: Atualiza um produto. Retorna 204 se for bem-sucedido, 400 se houver uma solicitação ruim, 404 se não for encontrado e 500 para erros internos do servidor.
-- `DELETE /produtos/{id}`: Exclui um produto. Retorna 200 se for bem-sucedido, 204 se nenhum conteúdo for encontrado, 400 se houver uma solicitação ruim, 404 se não for encontrado e 500 para erros internos do servidor.
-- `GET /produtos/categoria/{categoria}`: Retorna uma lista de produtos por categoria. Retorna 200 se for bem-sucedido, 204 se nenhum conteúdo for encontrado, 400 se houver uma solicitação ruim, 404 se não for encontrado e 500 para erros internos do servidor.
-
-### Rotas de Pedidos
-- `POST /pedidos`: Realiza o cadastro de um novo pedido. Retorna 201 se for bem-sucedido, 400 se houver uma solicitação ruim e 500 para erros internos do servidor.
-- `GET /pedidos/status/{status}`: Retorna todos os pedidos em um determinado status. Os status disponíveis são: Recebido (recebido), Em Preparação (preparacao), Pronto (pronto) e Finalizado (finalizado). Retorna 200 se for bem-sucedido, 400 se houver algum problema na solicitação e 500 para erros internos do servidor.
-- `POST /pedidos/{id}/checkout`: Realiza o checkout de um pedido. Retorna 201 se for bem-sucedido, 400 se houver uma solicitação ruim e 500 para erros internos do servidor.
-- `PATCH /pedidos/{id}/pagamento`: Atualiza o status de pagamento de um pedido. Retorna 200 se for bem-sucedido, 400 se houver algum problema na solicitação e 500 para erros internos do servidor.
-- `PATCH /pedidos/{id}/status`: Atualiza o status de um pedido. Retorna 200 se for bem-sucedido, 400 se houver algum problema na solicitação e 500 para erros internos do servidor.
-- `GET /pedidos`: Retorna uma lista de todos os pedidos. Retorna 200 se for bem-sucedido, 204 se nenhum conteúdo for encontrado e 500 para erros internos do servidor.
-- `GET /pedidos/{id}`: Retorna um pedido específico. Retorna 200 se for bem-sucedido, 404 se não for encontrado e 500 para erros internos do servidor.
+### Rotas de Pagamento
+- `POST /api/payments/:externalOrderId/checkout`: Realiza a solicitação de pagamento para o Mercado Pago
+- `POST /api/payments/confirmation`: Recebe o estímulo de retorno do Mercado Pago informando se o pagamento foi realizado ou se continua pendente. Um ponto importante aqui é que, o Mercado Pago continua enviando notificações para o endpoint acima durante 15 minutos, após isso, a notificação é cancelada caso não receba um status code 200 dentro de 15 minutos.
+- `GET /api/payments/:internalPaymentId`: Consulta dados do pagamento realizado.
 
 <a id="ordem"></a>
 ## Ordem de Execução das API
 Para o funcionamento correto das APIs, a ordem abaixo deverá ser seguida à depender do cenário desejado:
 
-### Realizar pedido para cliente _não identificado_
+### Criar ordem de pagamento no Mercado Pago
 <a name="recurso"></a>
-1. [Listar produtos por categoria](#recurso10)
-2. [Criar pedido](#createPedido)
-3. [Realizar checkout](#recurso13)
-4. [Atualizar status do pedido para 'Em preparação'](#recurso14)
-5. [Atualizar status do pedido para 'Pronto'](#recurso14)
-6. [Atualizar status do pedido para 'Finalizado'](#recurso14)
-
-### Realizar pedido para _cliente identificado_
-1. [Cadastrar cliente](#recurso1)
-2. [Listar produtos por categoria](#recurso10)
-3. [Criar pedido](#createPedido)
-4. [Realizar checkout](#recurso13)
-5. [Atualizar status do pedido para 'Em preparação'](#recurso14)
-6. [Atualizar status do pedido para 'Pronto'](#recurso14)
-7. [Atualizar status do pedido para 'Finalizado'](#recurso14)
+1. [Pagamento](#recurso1)
+2. [Confirmar pagamento](#recurso2)
+3. [Consultar pagamento](#recurso3)
 
 <a id="recurso"></a>
 ## Recursos
@@ -276,238 +252,24 @@ Para o funcionamento correto das APIs, a ordem abaixo deverá ser seguida à dep
 ### Cliente
 
 <a id="recurso1"></a>
-#### Cadastrar Cliente
+#### Pagamento
 ```sh
-POST http://localhost:8080/api/clientes
-{
-    "cpf": "52001817983",
-    "email": "rafaela-almada91@imail.com",
-    "nome": "Rafaela Lorena Almada"
-}
+POST http://localhost:8080/api/payments/:externalOrderId/checkout
 ```
 <a id="recurso2"></a>
-#### Listar Clientes
+#### Confirmar pagamento
 ```sh
-GET http://localhost:8080/api/clientes
+POST http://localhost:8080/api/payments/confirmation
+{
+  "resource": "12345678900"
+  "topic": "merchant_order"
+}
 ```
 
 <a id="recurso3"></a>
-#### Atualização Parcial de Clientes
+#### Consultar pagamento
 ```sh
-PATCH http://localhost:8080/api/clientes
-{
-    "cpf": "52001817983",
-    "email": "rafaela-almada91@imail.com",
-    "nome": "Rafaela Lorena Almada"
-}
-```
-
-<a id="recurso4"></a>
-#### Atualização de Clientes
-```sh
-PUT http://localhost:8080/api/clientes
-{
-    "cpf": "52001817983",
-    "email": "rafaela-almada91@imail.com",
-    "nome": "Rafaela Lorena Almada"
-}
-```
-
-### Produto
-
-<a id="recurso5"></a>
-#### Cadastrar Produto
-```sh
-POST http://localhost:8080/api/produtos
-{
-    "nome": "Bebida Láctea de Morango",
-    "descricao": "Bebida Láctea de Morango 500ml",
-    "categoria": {
-      "nome": "Bebida",
-      "descricao": "Coquinha Gelada"
-    },
-    "preco": 19.9,
-    "imagem": "CDN:imagem"
-}
-```
-
-<a id="recurso6"></a>
-#### Listar Produtos
-```sh
-GET http://localhost:8080/api/produtos?nome=string&descricao=string&preco=string
-```
-
-<a id="recurso7"></a>
-#### Atualização Parcial de Produto
-```sh
-PATCH http://localhost:8080/api/produtos/:id
-[
-    {
-    "op": "replace",
-    "path": "/nome",
-    "value": "Novo Nome do Produto"
-    }
-]
-```
-
-<a id="recurso8"></a>
-#### Atualização de Produto
-```sh
-PUT http://localhost:8080/api/produtos/:id
-{
-    "nome": "Bebida Láctea de Morango",
-    "descricao": "Bebida Láctea de Morango 500ml",
-    "categoria": {
-      "nome": "Acompanhamento",
-      "descricao": "Fritura"
-    },
-    "preco": 19.9,
-    "imagem": "CDN:imagem"
-}
-```
-
-<a id="recurso9"></a>
-#### Exclusão de Produto
-```sh
-DELETE http://localhost:8080/api/produtos/:id
-```
-
-### Categoria
-
-<a id="recurso10"></a>
-#### Listar Produtos por Categoria
-```sh
-GET http://localhost:8080/api/produtos/categoria/:categoria
-:categoria
-- LANCHE
-- BEBIDA
-- ACOMPANHAMENTO
-- SOBREMESA
-```
-
-<a id="findAllCategories"></a>
-#### Listar Todas Categorias
-```sh
-GET http://localhost:8080/api/categorias
-```
-
-### Pedido
-
-<a id="createPedido"></a>
-#### Cadastrar Pedido
-```shell
-POST http://localhost:8080/api/pedidos
-{
-   "id":12345678900,
-   "cliente":{
-      "id":12,
-      "cpf":"12312312312",
-      "nome":"Joel",
-      "email":"joel@email.com"
-   },
-   "status":{
-     "id": 1,
-     "nome": "Em Preparo"
-   },
-   "valor":89.25,
-   "dataCriacao":"2024-05-02T00:00:00",
-   "dataFinalizacao":"2024-05-02T00:00:00",
-   "dataCancelamento":"2024-05-02T00:00:00",
-   "statusPagamento": {
-     "id": 1,
-     "nome": "Pago"
-   },
-   "produtos":[
-      {
-         "produto":{
-            "id":12345678900,
-            "nome":"Product Name",
-            "descricao":"Product Description",
-            "preco":49.99,
-            "imagem":"image_url"
-         },
-         "valorTotal":125.78,
-         "quantidade":2.0
-      }
-   ],
-   "items":{
-      "lanches":[
-         {
-            "id":46,
-            "quantidade":2
-         }
-      ],
-      "acompanhamento":[
-         {
-            "id":782,
-            "quantidade":5
-         }
-      ],
-      "bebida":[
-         {
-            "id":1,
-            "quantidade":1
-         }
-      ],
-      "sobremesa":[
-         {
-            "id":968,
-            "quantidade":2
-         }
-      ]
-   }
-}
-
-```
-
-<a id="recurso11"></a>
-#### Obter Pedido por Identificador
-```sh
-GET http://localhost:8080/api/pedidos/:id
-```
-
-<a id="recurso12"></a>
-#### Listar Pedidos
-```sh
-GET http://localhost:8080/api/pedidos
-```
-
-<a id="recurso13"></a>
-#### Realizar Pagamento de Pedido
-```sh
-POST http://localhost:8080/api/pedidos/:id/checkout
-```
-
-<a id="recurso14"></a>
-#### Atualizar Status do Pedido
-```sh
-PATCH http://localhost:8080/api/pedidos/:id/status
-[
-    {
-        "op": "replace",
-        "path": "/status",
-        "value": "preparacao|pronto|finalizado"
-    }
-]
-```
-
-<a id="recurso15"></a>
-#### Atualizar Status de Pagamento do Pedido
-```sh
-PATCH http://localhost:8080/api/pedidos/:id/pagamento
-[
-  {
-    "op": "replace",
-    "path": "/statusPagamentoEntity",
-    "value": "pendente|pago|recusado"
-  }
-]
-```
-
-<a id="recurso16"></a>
-#### Listar Pedidos por Status
-```sh
-GET http://localhost:8080/api/pedidos/status/:status
+GET http://localhost:8080/api/payments/:internalPaymentId
 ```
 
 <a id="erro"></a>
@@ -545,3 +307,8 @@ GET http://localhost:8080/api/pedidos/status/:status
 - `407`: Pedidos no status 'Pronto' só podem avançar para o status 'Finalizado'.
 - `408`: Pedidos no status 'Finalizado' não podem ser alterados.
 - `499`: Erro genérico ao atualizar o status do pedido.
+
+## Cobertura
+<img height="250" src="src/main/resources/img/cov_payment_ms.png" title="Cobertura de Testes" width="1195"/>
+
+### [Link para a Evidência de Cobertura](https://sonarcloud.io/project/overview?id=FIAP-6SOAT-G10_fiap-fast-food-ms-pagamento)
