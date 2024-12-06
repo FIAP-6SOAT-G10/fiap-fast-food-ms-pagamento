@@ -10,7 +10,18 @@ env:
 
 jobs:
 
+  approve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Approve build and deploy
+        uses: BrianCArnold/RequireUserApproval@debug28
+
+        with:
+          token: ${{ secrets.PIPELINE_APPROVALS }}
+          config: .github/require_reviewers.yml
+
   unit-tests:
+    needs: approve
     runs-on: ubuntu-latest
 
     steps:
@@ -120,7 +131,7 @@ jobs:
         run: mvn spring-boot:run
 
       - name: Run system tests
-        run: make system-test
+        run: make system-test  
 
   build:
     needs: system-tests
