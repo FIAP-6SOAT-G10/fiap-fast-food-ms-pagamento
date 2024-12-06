@@ -1,5 +1,3 @@
-include .env
-
 build:
 	mvn compile
 

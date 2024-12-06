@@ -15,7 +15,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class ConsultPaymentUseCaseTest {
@@ -50,8 +51,6 @@ class ConsultPaymentUseCaseTest {
     @Test
     void deveLancarExcecao_QuandoRealizarConsultaDePagamento_IdentificadorNaoEncontrado() {
         String internalPaymentId = UUID.randomUUID().toString();
-        PaymentRequest paymentRequest = PaymentHelper.buildPaymentRequest();
-        PaymentEntity paymentEntity = PaymentHelper.buildPaymentEntity(internalPaymentId, paymentRequest);
         when(paymentRepository.findPayment(internalPaymentId)).thenThrow(new IllegalArgumentException("Pagamento não encontrado"));
 
         PaymentNotFoundException exception = assertThrows(PaymentNotFoundException.class, () -> consultPaymentUseCase.findPaymentById(internalPaymentId));

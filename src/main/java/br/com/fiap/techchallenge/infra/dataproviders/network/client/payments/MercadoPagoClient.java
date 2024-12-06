@@ -1,8 +1,8 @@
 package br.com.fiap.techchallenge.infra.dataproviders.network.client.payments;
 
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.config.MercadoPagoFeignConfig;
-import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.model.MercadoPagoPaymentDetailResponse;
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.model.MercadoPagoOrderPaymentResponse;
+import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.model.MercadoPagoPaymentDetailResponse;
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.model.MercadoPagoPaymentRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

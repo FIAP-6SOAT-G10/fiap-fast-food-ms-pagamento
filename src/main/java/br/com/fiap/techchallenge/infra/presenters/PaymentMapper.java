@@ -14,9 +14,13 @@ public class PaymentMapper {
     public PaymentRequest fromDataTransferObjetToDomain(PaymentRequestDTO paymentRequestDTO) {
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setExternalOrderId(paymentRequestDTO.getExternalOrderId());
-        paymentRequest.setPayer(paymentRequestDTO.getPayer());
+        paymentRequest.setPayer(getPayer(paymentRequestDTO));
         paymentRequest.setPaymentAmount(paymentRequestDTO.getPaymentAmount());
         return paymentRequest;
+    }
+
+    private static String getPayer(PaymentRequestDTO paymentRequestDTO) {
+        return paymentRequestDTO.getPayer() == null || paymentRequestDTO.getPayer().isEmpty() ? "desconhecido@desconhecido.com.br" : paymentRequestDTO.getPayer();
     }
 
     public PaymentEntity fromDomainToEntity(PaymentRequest paymentRequest) {

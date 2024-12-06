@@ -3,15 +3,14 @@ package br.com.fiap.techchallenge.application.usecases.payment;
 import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentResponse;
 import br.com.fiap.techchallenge.infra.gateways.MercadoPagoPaymentProviderRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 class VerifyPaymentUseCaseTest {

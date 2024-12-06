@@ -1,6 +1,5 @@
 package br.com.fiap.techchallenge.application.usecases.payment;
 
-import br.com.fiap.techchallenge.PaymentHelper;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentRequest;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.PaymentEntity;

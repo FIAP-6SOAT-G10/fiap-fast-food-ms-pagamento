@@ -1,8 +1,8 @@
 package br.com.fiap.techchallenge.infra.gateways;
 
 import br.com.fiap.techchallenge.application.gateways.IPaymentProviderRepository;
-import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentResponse;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
+import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentResponse;
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.MercadoPagoClient;
 import br.com.fiap.techchallenge.infra.dataproviders.network.client.payments.model.*;
 import lombok.extern.slf4j.Slf4j;

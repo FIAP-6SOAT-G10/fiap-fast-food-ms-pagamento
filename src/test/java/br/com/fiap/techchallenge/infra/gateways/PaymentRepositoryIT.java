@@ -27,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class PaymentRepositoryIT {
 
     @Autowired
-    private PaymentRepository paymentRepository;
+    PaymentRepository paymentRepository;
 
     @Autowired
-    private PaymentRedShiftRepository paymentRedShiftRepository;
+    PaymentRedShiftRepository paymentRedShiftRepository;
 
     @Test
     void deveCriarTabela() {
@@ -62,7 +62,8 @@ class PaymentRepositoryIT {
 
         @Test
         void deveLancarExcecao_AoGravarPagamento_QuandoPagamentoNaoForEncontrado_IdentificadorExternoNaoExiste() {
-            assertThrows(IllegalArgumentException.class, () -> paymentRepository.savePayment(RandomStringUtils.randomNumeric(11)));
+            String externalOrderId = RandomStringUtils.randomNumeric(11);
+            assertThrows(IllegalArgumentException.class, () -> paymentRepository.savePayment(externalOrderId));
         }
 
     }
@@ -131,7 +132,8 @@ class PaymentRepositoryIT {
 
         @Test
         void deveLancarExcecao_AoRecuperarPagamento_QuandoPagamentoNaoForEncontrado_IdentificadorInternoNaoExiste() {
-            assertThrows(IllegalArgumentException.class, () -> paymentRepository.findPayment(UUID.randomUUID().toString()));
+            String internalOrderId = UUID.randomUUID().toString();
+            assertThrows(IllegalArgumentException.class, () -> paymentRepository.findPayment(internalOrderId));
         }
 
     }

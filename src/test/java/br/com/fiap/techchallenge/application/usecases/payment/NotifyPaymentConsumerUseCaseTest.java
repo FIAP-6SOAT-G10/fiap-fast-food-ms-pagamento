@@ -1,6 +1,5 @@
 package br.com.fiap.techchallenge.application.usecases.payment;
 
-import br.com.fiap.techchallenge.PaymentHelper;
 import br.com.fiap.techchallenge.domain.entities.pagamento.Payment;
 import br.com.fiap.techchallenge.domain.entities.pagamento.PaymentRequest;
 import br.com.fiap.techchallenge.infra.dataproviders.database.persistence.payments.PaymentEntity;
@@ -10,13 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.UUID;
 
 import static br.com.fiap.techchallenge.PaymentHelper.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class NotifyPaymentConsumerUseCaseTest {
 

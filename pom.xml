@@ -44,6 +44,8 @@
 		<redshift.version>2.29.2</redshift.version>
 		<redshift-jdbc42-no-awssdk.version>1.2.47.1071</redshift-jdbc42-no-awssdk.version>
 		<postgresql.version>42.7.4</postgresql.version>
+		<sonar-maven-plugin.version>5.0.0.4389</sonar-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
 		<sonar.exclusions>
 			src/main/java/br/com/fiap/techchallenge/application/gateways/**,
 			src/main/java/br/com/fiap/techchallenge/domain/**,
@@ -140,7 +142,7 @@
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-common</artifactId>
-			<version>4.1.115.final</version>
+			<version>4.1.115.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -236,6 +238,15 @@
 	</dependencyManagement>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>${sonar-maven-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -274,6 +285,37 @@
 						<version>${aspectj.version}</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/AWSConfig.*</exclude>
+								<exclude>**/PaymentConfig.java</exclude>
+								<exclude>**/PaymentMicroserviceApplication.java</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<excludes>
+						<exclude>**/ICustomerRepository$MockitoMock$*</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -319,6 +361,19 @@
 							</excludes>
 						</configuration>
 					</plugin>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco-maven-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -363,6 +418,45 @@
 								</configurationParameters>
 							</properties>
 						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>cov</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco-maven-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<formats>
+										<format>XML</format>
+									</formats>
+									<excludes>
+										<exclude>**/AWSConfig.*</exclude>
+										<exclude>**/PaymentConfig.java</exclude>
+										<exclude>**/PaymentController.*</exclude>
+										<exclude>**/PaymentMicroserviceApplication.java</exclude>
+										<exclude>**/PaymentMicroserviceApplicationTests.java</exclude>
+										<exclude>**/PaymentMicroserviceApplicationIT.java</exclude>
+									</excludes>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>

@@ -94,7 +94,6 @@ class PaymentControllerTest {
             PaymentRequest paymentRequest = buildPaymentRequest();
             PaymentEntity paymentEntity = buildPaymentEntity(UUID.randomUUID().toString(), paymentRequest);
             Payment payment = buildPayment(paymentEntity);
-            PaymentResponseDTO paymentResponseDTO = buildPaymentResponseDTO(payment);
             when(makePaymentUseCase.execute(externalOrderId)).thenThrow(new IllegalArgumentException("Pagamento não encontrado"));
 
             ResponseEntity<PaymentResponseDTO> response = paymentController.makePayment(externalOrderId);
