@@ -122,8 +122,17 @@ jobs:
       - name: Run system tests
         run: make system-test
 
+  approve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Approve build and deploy
+        uses: BrianCArnold/require-user-approval@v0.0.1
+        with:
+          token: ${{ secrets.PIPELINE_APPROVALS }}
+          config: .github/require_reviewers.yml
+
   build:
-    needs: system-tests
+    needs: approve
     runs-on: ubuntu-latest
 
     steps:

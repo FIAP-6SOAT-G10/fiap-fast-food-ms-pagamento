@@ -1,0 +1,10 @@
+groups:
+  # The default reviewers
+  review-group-all: # This group requires all 4 users to approve a PR.
+    members:
+      - gabriwl165
+      - Getnerski
+      - magneon
+      - sourceGabriel
+      - anderson-solucoes
+    required: 1 # the number of members from this group that need to approve a PR.
