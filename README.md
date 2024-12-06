@@ -312,3 +312,5 @@ GET http://localhost:8080/api/payments/:internalPaymentId
 <img height="250" src="src/main/resources/img/cov_payment_ms.png" title="Cobertura de Testes" width="1195"/>
 
 ### [Link para a Evidência de Cobertura](https://sonarcloud.io/project/overview?id=FIAP-6SOAT-G10_fiap-fast-food-ms-pagamento)
+
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=FIAP-6SOAT-G10_fiap-fast-food-ms-pedido)](https://sonarcloud.io/summary/new_code?id=FIAP-6SOAT-G10_fiap-fast-food-ms-pedido)
