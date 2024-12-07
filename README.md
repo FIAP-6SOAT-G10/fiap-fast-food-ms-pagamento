@@ -306,7 +306,7 @@ GET http://localhost:8080/api/payments/:internalPaymentId
 - `406`: Pedidos no status 'Em preparação' só podem avançar para o status 'Pronto'.
 - `407`: Pedidos no status 'Pronto' só podem avançar para o status 'Finalizado'.
 - `408`: Pedidos no status 'Finalizado' não podem ser alterados.
-- `499`: Erro genérico ao atualizar o status do pedido.
+- `499`: Erro genérico ao atualizar o status do pedido
 
 ## Cobertura
 <img height="250" src="src/main/resources/img/cov_payment_ms.png" title="Cobertura de Testes" width="1195"/>
