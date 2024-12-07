@@ -57,9 +57,25 @@ jobs:
         run: |
           mvn sonar:sonar -Dsonar.projectKey=FIAP-6SOAT-G10_fiap-fast-food-ms-pagamento -Dsonar.organization=fiap-6soat-g10-1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Pcov      
 
-  integration-tests:
+  coverage:
     runs-on: ubuntu-latest
     needs: unit-tests
+
+    steps:
+    
+      - name: Fetch Quality Gate Result
+        run: |
+          STATUS=$(curl -s -u $SONAR_TOKEN: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=FIAP-6SOAT-G10_fiap-fast-food-ms-pagamento" | jq -r '.projectStatus.status')
+          if [ "$STATUS" != "OK" ]; then
+            echo "SonarQube Quality Gate Falhou"
+            exit 1
+          fi
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: coverage
 
     steps:
       - name: Checkout code
